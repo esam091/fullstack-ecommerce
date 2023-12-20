@@ -18,8 +18,8 @@ import {
  */
 export const mysqlTable = mysqlTableCreator((name) => `ecomm-portfolio_${name}`);
 
-export const posts = mysqlTable(
-  "post",
+export const shops = mysqlTable(
+  "shop",
   {
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
     name: varchar("name", { length: 256 }),
