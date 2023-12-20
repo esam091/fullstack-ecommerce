@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { CreatePost } from "@/app/_components/create-post";
 import { api } from "@/trpc/server";
+import {Button} from '@/components/ui/button'
 
 export default async function Home() {
 
@@ -21,6 +21,8 @@ export default async function Home() {
             <div className="text-lg">
               Just the basics - Everything you need to know to set up your
               database and authentication.
+
+              <Button>asdf</Button>
             </div>
           </Link>
           <Link
