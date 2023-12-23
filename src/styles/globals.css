@@ -4,35 +4,40 @@
  
 @layer base {
   :root {
-    --gradient: #003d4d;
-    --background: 204 100% 98.3%;
-    --foreground: 204 10% 0.6%;
+    /* Name: custom color palette
+       Author: Ilias Ism
+       URL: https://gradient.page */
 
-    --muted: 204 10% 91.5%;
-    --muted-foreground: 204 5% 41.5%;
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+    --gradient: #414d0b;
+    --background: 75 98.75% 98.34%;
+    --foreground: 75 7.5% 0.68%;
 
-    --popover: 204 10% 91.5%;
-    --popover-foreground: 204 10% 0.75%;
+    --muted: 75 7.5% 91.7%;
+    --muted-foreground: 75 3.75% 41.7%;
 
-    --card: 204 10% 91.5%;
-    --card-foreground: 204 10% 0.75%;
+    --popover: 75 30% 91.7%;
+    --popover-foreground: 75 7.5% 0.8500000000000001%;
 
-    --border: 204 15% 89.6%;
-    --input: 204 15% 89.6%;
+    --card: 75 30% 91.7%;
+    --card-foreground: 75 7.5% 0.8500000000000001%;
 
-    --primary: 204 100% 15%;
-    --primary-foreground: 204 2% 91.5%;
+    --border: 75 12.5% 89.68%;
+    --input: 75 12.5% 89.68%;
 
-    --secondary: 204 5% 95.75%;
-    --secondary-foreground: 204 7% 11.5%;
+    --primary: 75 75% 17%;
+    --primary-foreground: 75 1.5% 91.7%;
 
-    --accent: 204 5% 95.75%;
-    --accent-foreground: 204 7% 11.5%;
+    --secondary: 75 3.75% 95.85%;
+    --secondary-foreground: 75 5.5% 11.7%;
+
+    --accent: 75 3.75% 95.85%;
+    --accent-foreground: 75 5.5% 11.7%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 204 100% 15%;
+    --ring: 75 75% 17%;
 
     --radius: 0.5rem;
   }

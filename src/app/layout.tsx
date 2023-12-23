@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 import { TRPCReactProvider } from "@/trpc/react";
 
 import { ClerkProvider } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
 import NavBar from "./Navbar";
 
 const inter = Inter({
@@ -26,7 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorPrimary: "hsl(75 75% 17%)",
+        },
+      }}
+    >
       <html lang="en">
         <body className={`font-sans ${inter.variable} h-full`}>
           <TRPCReactProvider cookies={cookies().toString()}>
