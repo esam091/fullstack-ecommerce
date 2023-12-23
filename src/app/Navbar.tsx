@@ -11,11 +11,10 @@ import {
 import { SignIn } from "@clerk/nextjs";
 
 export default function NavBar() {
-  // return <header></header>;
   return (
     <header>
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button>Sign In</Button>
         </DialogTrigger>
         <DialogPortal>
