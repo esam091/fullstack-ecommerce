@@ -7,8 +7,7 @@ import {
   DialogContent,
 } from "@/components/ui/dialog";
 import { SignIn, SignOutButton, auth, currentUser } from "@clerk/nextjs";
-// 414d0b
-// 1f4037
+
 export default async function NavBar() {
   const aa = await currentUser();
   console.log("user exists?", aa);
