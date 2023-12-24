@@ -1,10 +1,8 @@
 import Link from "next/link";
 
-import { api } from "@/trpc/server";
-import {Button} from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 export default async function Home() {
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
@@ -21,7 +19,6 @@ export default async function Home() {
             <div className="text-lg">
               Just the basics - Everything you need to know to set up your
               database and authentication.
-
               <Button>asdf</Button>
             </div>
           </Link>
@@ -38,13 +35,9 @@ export default async function Home() {
           </Link>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <p className="text-2xl text-white">
-            Hello
-          </p>
+          <p className="text-2xl text-white">Hello</p>
         </div>
-
       </div>
     </main>
   );
 }
-
