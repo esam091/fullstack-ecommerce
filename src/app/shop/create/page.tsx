@@ -1,9 +1,33 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormTextField from "@/components/ui/form-textfield";
+
+const fromSchema = z.object({
+  name: z.string().min(2),
+  location: z.string().min(2),
+  image: z.string(),
+});
 
 export default function Page() {
+  const form = useForm<z.infer<typeof fromSchema>>({
+    resolver: zodResolver(fromSchema),
+  });
+
+  const { handleSubmit, control } = form;
+
   return (
     <Card className="mx-auto w-full max-w-2xl shadow-md">
       <CardHeader>
@@ -11,33 +35,43 @@ export default function Page() {
       </CardHeader>
 
       <CardContent>
-        <form className="mt-6">
-          <div className="mb-6 flex flex-wrap">
-            <Label className="mb-2 block w-full text-sm font-bold text-gray-700">
-              Shop Name
-              <Input
-                // className="form-input mt-1 block w-full rounded-md bg-gray-200 px-4 py-3 focus:bg-white"
-                placeholder="Enter shop name"
-                type="text"
-              />
-            </Label>
-          </div>
-          <div className="mb-6 flex flex-wrap">
-            <Label className="mb-2 block w-full text-sm font-bold text-gray-700">
-              Shop Image
-              <Input type="file" />
-            </Label>
-          </div>
-          <div className="mb-6 flex flex-wrap">
-            <Label className="mb-2 block w-full text-sm font-bold text-gray-700">
-              Location
-              <Input placeholder="Enter location" type="text" />
-            </Label>
-          </div>
-          <div className="flex items-center justify-between">
-            <Button>Create Shop</Button>
-          </div>
-        </form>
+        <Form {...form}>
+          <form
+            className="grid gap-6"
+            onSubmit={handleSubmit(
+              (data) => {
+                console.log("done");
+              },
+              () => alert("failed"),
+            )}
+          >
+            <FormTextField
+              control={control}
+              name="name"
+              label="Shop Name"
+              placeholder="My awesome shop"
+            />
+
+            <FormTextField
+              control={control}
+              label="Location"
+              placeholder="New York"
+              name="location"
+              description="This will be used to calculate shipping costs to customers"
+            />
+
+            <FormTextField
+              control={control}
+              name="image"
+              label="Image"
+              type="file"
+            />
+
+            <div className="flex items-center justify-between">
+              <Button type="submit">Create Shop</Button>
+            </div>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );
