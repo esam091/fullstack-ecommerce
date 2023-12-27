@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button, LoadingButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
@@ -25,9 +25,13 @@ const fromSchema = z.object({
 export default function Page() {
   const form = useForm<z.infer<typeof fromSchema>>({
     resolver: zodResolver(fromSchema),
+    defaultValues: {
+      location: "",
+      name: "",
+    },
   });
 
-  const { handleSubmit, control, setValue } = form;
+  const { handleSubmit, control } = form;
   const toast = useToast();
   const imageUpload = useImageUpload();
 
@@ -75,7 +79,7 @@ export default function Page() {
             <FormImageUpload control={control} name="image" />
 
             <div className="flex items-center justify-between">
-              <Button type="submit">Create Shop</Button>
+              <LoadingButton type="submit">Create Shop</LoadingButton>
             </div>
           </form>
         </Form>

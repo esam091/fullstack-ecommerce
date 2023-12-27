@@ -19,6 +19,29 @@ export async function POST(request: Request) {
     );
   }
 
+  const imageType = imageFile.type;
+  const imageSize = imageFile.size;
+
+  if (!imageType.startsWith("image/")) {
+    return new Response(
+      JSON.stringify({ error: "Uploaded file is not an image" }),
+      {
+        headers: { "Content-Type": "application/json" },
+        status: 400,
+      },
+    );
+  }
+
+  if (imageSize > 1000000) {
+    return new Response(
+      JSON.stringify({ error: "Image size should not exceed 1MB" }),
+      {
+        headers: { "Content-Type": "application/json" },
+        status: 400,
+      },
+    );
+  }
+
   const fileName = crypto.randomUUID();
 
   const { error } = await supabase.storage

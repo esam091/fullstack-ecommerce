@@ -27,13 +27,12 @@ export const shopRouter = createTRPCRouter({
           message: "User already has a shop",
         });
       }
-      const newShop = await ctx.db.insert(shops).values({
+
+      await ctx.db.insert(shops).values({
         userId: ctx.auth.userId,
         name: input.name,
         image: input.image,
         location: input.location,
       });
-
-      return newShop;
     }),
 });

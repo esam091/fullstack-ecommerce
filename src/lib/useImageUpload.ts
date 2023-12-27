@@ -6,9 +6,12 @@ const schema = zod.object({
 });
 
 const uploadImage = async (imageFile: File) => {
+  const formData = new FormData();
+  formData.append("image", imageFile);
+
   const response = await fetch("/api/upload-image", {
     method: "POST",
-    body: imageFile,
+    body: formData,
   });
 
   if (!response.ok) {
