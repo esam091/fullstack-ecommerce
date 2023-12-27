@@ -19,21 +19,20 @@ export async function POST(request: Request) {
     );
   }
 
+  const fileName = crypto.randomUUID();
+
   const { error } = await supabase.storage
     .from("hc-images")
-    .upload(imageFile.name, imageFile);
+    .upload(fileName, imageFile);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "Upload failed" }), {
       headers: { "Content-Type": "application/json" },
       status: 500,
     });
   }
 
-  return new Response(
-    JSON.stringify({ message: "Image uploaded successfully" }),
-    {
-      headers: { "Content-Type": "application/json" },
-    },
-  );
+  return new Response(JSON.stringify({ id: fileName }), {
+    headers: { "Content-Type": "application/json" },
+  });
 }
