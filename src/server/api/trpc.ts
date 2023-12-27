@@ -25,8 +25,10 @@ import { db } from "@/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const userAuth = auth();
   return {
     db,
+    auth: userAuth,
     ...opts,
   };
 };
@@ -74,3 +76,19 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+import { TRPCError } from "@trpc/server";
+import { auth } from "@clerk/nextjs";
+
+const isAuthed = t.middleware(async (opts) => {
+  const { ctx } = opts;
+  if (!ctx.auth.userId) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return opts.next({
+    ctx: {
+      auth: ctx.auth,
+    },
+  });
+});
+
+export const authenticatedProcedure = publicProcedure.use(isAuthed);
