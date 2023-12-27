@@ -1,19 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormDescription,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormTextField from "@/components/ui/form-textfield";
+import { api } from "@/trpc/react";
+import { useToast } from "@/components/ui/use-toast";
 
 const fromSchema = z.object({
   name: z.string().min(2),
@@ -27,6 +21,20 @@ export default function Page() {
   });
 
   const { handleSubmit, control } = form;
+  const toast = useToast();
+
+  const createShop = api.shop.createShop.useMutation();
+
+  const onSubmit = async (data: z.infer<typeof fromSchema>) => {
+    createShop.mutate(data, {
+      onSuccess: () => {
+        toast.toast({ title: "Shop created successfully" });
+      },
+      onError: () => {
+        toast.toast({ title: "Failed to create shop" });
+      },
+    });
+  };
 
   return (
     <Card className="mx-auto w-full max-w-2xl shadow-md">
@@ -36,15 +44,7 @@ export default function Page() {
 
       <CardContent>
         <Form {...form}>
-          <form
-            className="grid gap-6"
-            onSubmit={handleSubmit(
-              (data) => {
-                console.log("done");
-              },
-              () => alert("failed"),
-            )}
-          >
+          <form className="grid gap-6" onSubmit={handleSubmit(onSubmit)}>
             <FormTextField
               control={control}
               name="name"

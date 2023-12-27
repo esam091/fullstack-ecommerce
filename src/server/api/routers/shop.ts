@@ -1,8 +1,4 @@
-import {
-  authenticatedProcedure,
-  createTRPCRouter,
-  publicProcedure,
-} from "@/server/api/trpc";
+import { authenticatedProcedure, createTRPCRouter } from "@/server/api/trpc";
 import { shops } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";

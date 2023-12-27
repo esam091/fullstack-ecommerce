@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 
 import { ClerkProvider } from "@clerk/nextjs";
 import NavBar from "./Navbar";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
             <NavBar />
             {children}
           </TRPCReactProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
