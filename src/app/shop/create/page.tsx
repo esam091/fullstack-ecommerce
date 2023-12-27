@@ -8,11 +8,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormTextField from "@/components/ui/form-textfield";
 import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
+import FormImageUpload from "@/components/ui/form-image-upload";
+import { useImageUpload } from "@/lib/useImageUpload";
 
 const fromSchema = z.object({
-  name: z.string().min(2),
-  location: z.string().min(2),
-  image: z.string(),
+  name: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9 ]+$/i, {
+      message: "Name must be alphanumeric and can contain spaces",
+    }),
+  location: z.string({ required_error: "Required" }),
+  image: z.instanceof(File, { message: "Please select an image" }),
 });
 
 export default function Page() {
@@ -20,20 +27,25 @@ export default function Page() {
     resolver: zodResolver(fromSchema),
   });
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit, control, setValue } = form;
   const toast = useToast();
+  const imageUpload = useImageUpload();
 
   const createShop = api.shop.createShop.useMutation();
 
   const onSubmit = async (data: z.infer<typeof fromSchema>) => {
-    createShop.mutate(data, {
-      onSuccess: () => {
-        toast.toast({ title: "Shop created successfully" });
+    const imageId = await imageUpload.mutateAsync(data.image);
+    createShop.mutate(
+      { ...data, image: imageId },
+      {
+        onSuccess: () => {
+          toast.toast({ title: "Shop created successfully" });
+        },
+        onError: () => {
+          toast.toast({ title: "Failed to create shop" });
+        },
       },
-      onError: () => {
-        toast.toast({ title: "Failed to create shop" });
-      },
-    });
+    );
   };
 
   return (
@@ -60,12 +72,7 @@ export default function Page() {
               description="This will be used to calculate shipping costs to customers"
             />
 
-            <FormTextField
-              control={control}
-              name="image"
-              label="Image"
-              type="file"
-            />
+            <FormImageUpload control={control} name="image" />
 
             <div className="flex items-center justify-between">
               <Button type="submit">Create Shop</Button>
