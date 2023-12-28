@@ -10,6 +10,7 @@ import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
 import FormImageUpload from "@/components/ui/form-image-upload";
 import { useImageUpload } from "@/lib/useImageUpload";
+import ImageUploader from "@/components/ui/ImageUploader";
 
 const fromSchema = z.object({
   name: z
@@ -77,6 +78,8 @@ export default function Page() {
             />
 
             <FormImageUpload control={control} name="image" />
+
+            <ImageUploader />
 
             <div className="flex items-center justify-between">
               <LoadingButton type="submit">Create Shop</LoadingButton>
