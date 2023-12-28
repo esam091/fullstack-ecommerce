@@ -11,7 +11,7 @@ import {
   type FieldPath,
   type Control,
 } from "react-hook-form";
-import { Input, type InputProps } from "./input";
+import ImageUploader from "./ImageUploader";
 
 export type FormImageUploadProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -21,7 +21,7 @@ export type FormImageUploadProps<
   label?: string;
   description?: string;
   control: Control<TFieldValues>;
-} & InputProps;
+};
 
 export default function FormImageUpload<
   TFieldValues extends FieldValues = FieldValues,
@@ -31,7 +31,6 @@ export default function FormImageUpload<
   name,
   label,
   description,
-  ...rest
 }: FormImageUploadProps<TFieldValues, TName>) {
   return (
     <FormField
@@ -41,17 +40,7 @@ export default function FormImageUpload<
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input
-              {...rest}
-              type="file"
-              accept="image/*"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) {
-                  field.onChange(file);
-                }
-              }}
-            />
+            <ImageUploader onImageIdChange={(id) => field.onChange(id)} />
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />

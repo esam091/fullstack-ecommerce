@@ -10,13 +10,18 @@ import { Button } from "./button";
 const imagePrefix =
   "https://rymmmspllbfdqosgmyzt.supabase.co/storage/v1/object/public/hc-images/";
 
-function ImageUploader() {
+type ImageUploaderProps = {
+  onImageIdChange(id: string | null): void;
+};
+
+function ImageUploader({ onImageIdChange }: ImageUploaderProps) {
   const {
     progress,
     isLoading,
     data,
     mutate: upload,
     isIdle,
+    reset,
   } = useImageUpload();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -28,7 +33,9 @@ function ImageUploader() {
     onDrop(acceptedFiles) {
       const file = acceptedFiles[0];
       if (file) {
-        upload(file);
+        upload(file, {
+          onSuccess: onImageIdChange,
+        });
       }
     },
   });
@@ -46,7 +53,7 @@ function ImageUploader() {
           <Image
             src={`${imagePrefix}${data}`}
             alt="Uploaded"
-            className="h-full w-full rounded-md bg-cover"
+            className="h-full w-full rounded-md bg-cover shadow-sm"
             width={112}
             height={112}
           />
@@ -56,7 +63,10 @@ function ImageUploader() {
               type="button"
               size={"icon"}
               variant={"outline"}
-              onClick={() => {}}
+              onClick={() => {
+                reset();
+                onImageIdChange(null);
+              }}
             >
               <Trash size={20} />
             </Button>
@@ -65,10 +75,11 @@ function ImageUploader() {
       ) : (
         <div
           className={clsx(
-            "flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-md border-2  border-dashed p-2 py-10",
+            "flex h-full w-full  flex-col items-center justify-center rounded-md border-2  border-dashed p-2 py-10",
             isDragActive
               ? "border-blue-500 bg-blue-100 text-blue-600"
               : "border-gray-300 bg-background text-gray-300",
+            isIdle && "cursor-pointer",
           )}
         >
           {isLoading ? (
