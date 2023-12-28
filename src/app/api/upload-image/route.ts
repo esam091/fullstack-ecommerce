@@ -1,5 +1,11 @@
 import { env } from "@/env";
 import { createClient } from "@supabase/supabase-js";
+import sharp from "sharp";
+import fs from "fs";
+import { pipeline as pipelineCallback } from "stream";
+import { promisify } from "util";
+
+const pipeline = promisify(pipelineCallback);
 
 const supabaseUrl = env.SUPABASE_URL;
 const supabaseKey = env.SUPABASE_KEY;
@@ -20,7 +26,6 @@ export async function POST(request: Request) {
   }
 
   const imageType = imageFile.type;
-  const imageSize = imageFile.size;
 
   if (!imageType.startsWith("image/")) {
     return new Response(
@@ -32,23 +37,25 @@ export async function POST(request: Request) {
     );
   }
 
-  if (imageSize > 1000000) {
-    return new Response(
-      JSON.stringify({ error: "Image size should not exceed 1MB" }),
-      {
-        headers: { "Content-Type": "application/json" },
-        status: 400,
-      },
-    );
-  }
-
   const fileName = crypto.randomUUID();
+  const tempPath = `/tmp/${fileName}.webp`;
+  const newImageStream = fs.createWriteStream(tempPath);
+
+  const transform = sharp().resize(1024).webp();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await pipeline(imageFile.stream() as any, transform, newImageStream);
+  newImageStream.close();
 
   const { error } = await supabase.storage
     .from("hc-images")
-    .upload(fileName, imageFile);
+    .upload(fileName, fs.createReadStream(tempPath), {
+      duplex: "half",
+      contentType: "image/webp",
+    });
 
   if (error) {
+    console.error(error);
     return new Response(JSON.stringify({ error: "Upload failed" }), {
       headers: { "Content-Type": "application/json" },
       status: 500,
