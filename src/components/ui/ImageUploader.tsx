@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import { useDropzone } from "react-dropzone";
 import { ImagePlus as ImageIcon } from "lucide-react";
 import clsx from "clsx";
@@ -13,6 +13,10 @@ function ImageUploader() {
   const { progress, isLoading, data, mutate: upload } = useImageUpload();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    maxFiles: 1,
+    accept: {
+      "image/*": [".png", ".jpeg", ".jpg", ".webp"],
+    },
     onDrop(acceptedFiles) {
       const file = acceptedFiles[0];
       if (file) {
