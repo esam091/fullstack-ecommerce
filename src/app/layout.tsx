@@ -34,10 +34,12 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body className={`font-sans ${inter.variable} h-full`}>
+        <body
+          className={`font-sans ${inter.variable} flex h-full flex-col items-center`}
+        >
           <TRPCReactProvider cookies={cookies().toString()}>
             <NavBar />
-            <main className="pt-6">{children}</main>
+            <main className="container p-10 pb-16">{children}</main>
           </TRPCReactProvider>
           <Toaster />
         </body>
