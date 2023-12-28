@@ -18,6 +18,20 @@ export default {
     },
     extend: {
       colors: {
+        clover: {
+          "50": "#fafee7",
+          "100": "#f3fccb",
+          "200": "#e5f89e",
+          "300": "#d1f165",
+          "400": "#bae536",
+          "500": "#9ccb17",
+          "600": "#79a20e",
+          "700": "#5b7b10",
+          "800": "#4a6212",
+          "900": "#344511",
+          "950": "#1f2e05",
+        },
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
