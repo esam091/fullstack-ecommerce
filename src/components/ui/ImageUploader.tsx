@@ -4,37 +4,29 @@ import { ImagePlus as ImageIcon } from "lucide-react";
 import clsx from "clsx";
 import { Progress } from "./progress";
 import Image from "next/image";
+import { useImageUpload } from "@/lib/useImageUpload";
+
+const imagePrefix =
+  "https://rymmmspllbfdqosgmyzt.supabase.co/storage/v1/object/public/hc-images/";
 
 function ImageUploader() {
-  const [files, setFiles] = useState([]);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const { progress, isLoading, data, mutate: upload } = useImageUpload();
 
-  const onDrop = useCallback((acceptedFiles) => {
-    setFiles(acceptedFiles);
-    setUploading(true);
-    // Simulate upload progress
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      setUploadProgress(progress);
-      if (progress === 100) {
-        clearInterval(interval);
-        setUploading(false);
-        setUploadedImage(URL.createObjectURL(acceptedFiles[0]));
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop(acceptedFiles) {
+      const file = acceptedFiles[0];
+      if (file) {
+        upload(file);
       }
-    }, 500);
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    },
+  });
 
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      {uploadedImage ? (
+      {data ? (
         <Image
-          src={uploadedImage}
+          src={`${imagePrefix}${data}`}
           alt="Uploaded"
           className="h-28 w-28 rounded-md"
           width={112}
@@ -49,8 +41,8 @@ function ImageUploader() {
               : "border-gray-300 bg-background text-gray-300",
           )}
         >
-          {uploading ? (
-            <Progress value={uploadProgress} max={100} className="h-2" />
+          {isLoading ? (
+            <Progress value={progress} max={100} className="h-2" />
           ) : (
             <ImageIcon size={50} strokeWidth={1.1} />
           )}

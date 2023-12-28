@@ -10,7 +10,7 @@ const uploadImage = async (
   imageFile: File,
   progressCallback: (progress: number) => void,
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     const formData = new FormData();
     formData.append("image", imageFile);
 
