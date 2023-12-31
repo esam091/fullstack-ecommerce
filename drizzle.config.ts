@@ -9,4 +9,5 @@ export default {
     connectionString: env.DATABASE_URL,
   },
   tablesFilter: ["ecomm-portfolio_*"],
+  out: "migrations",
 } satisfies Config;
