@@ -2,6 +2,7 @@ import { ProductFields, productSchema } from "@/lib/schemas/product";
 import {
   authenticatedProcedure,
   createTRPCRouter,
+  publicProcedure,
   shopOwnerProcedure,
 } from "@/server/api/trpc";
 import { db } from "@/server/db";
@@ -62,5 +63,9 @@ export const productRouter = createTRPCRouter({
       .select()
       .from(products)
       .where(eq(products.shopId, ctx.shopId));
+  }),
+
+  getDetail: publicProcedure.input(productIdInput).query(async ({ input }) => {
+    return db.select().from(products).where(eq(products.id, input.productId));
   }),
 });
