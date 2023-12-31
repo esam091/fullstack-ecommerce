@@ -6,3 +6,5 @@ export const productSchema = z.object({
   image: z.string({ required_error: "Product photo is required" }).uuid(),
   price: z.number().min(0.1).max(10000),
 });
+
+export type ProductFields = z.infer<typeof productSchema>;

@@ -9,7 +9,6 @@ import FormTextField from "@/components/ui/form-textfield";
 import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
 import FormImageUpload from "@/components/ui/form-image-upload";
-import { useImageUpload } from "@/lib/useImageUpload";
 
 const fromSchema = z.object({
   name: z
