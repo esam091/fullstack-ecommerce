@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import { ImagePlus as ImageIcon, Trash } from "lucide-react";

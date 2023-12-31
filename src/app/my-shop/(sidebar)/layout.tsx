@@ -1,6 +1,7 @@
+import { type PropsWithChildren } from "react";
 import SidebarLink from "./sidebar-link";
 
-export default function Layout() {
+export default function Layout(props: PropsWithChildren) {
   return (
     <div>
       <div className="space-y-0.5">
@@ -18,7 +19,7 @@ export default function Layout() {
             <SidebarLink href="/my-shop/collections">Collections</SidebarLink>
           </nav>
         </aside>
-        <div className="flex-1 lg:max-w-2xl">content</div>
+        <div className="flex-1 lg:max-w-2xl">{props.children}</div>
       </div>
     </div>
   );
