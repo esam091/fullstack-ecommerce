@@ -1,4 +1,6 @@
 import { api } from "@/trpc/server";
+import AddEditProductForm from "../../add-edit-product-form";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params: { productId },
@@ -9,5 +11,9 @@ export default async function Page({
     productId: Number(productId),
   });
 
-  return <div>{JSON.stringify(product, null, 2)}</div>;
+  if (!product) {
+    notFound();
+  }
+
+  return <AddEditProductForm product={product} />;
 }

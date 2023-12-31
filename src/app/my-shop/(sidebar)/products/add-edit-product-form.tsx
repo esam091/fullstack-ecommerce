@@ -7,29 +7,47 @@ import { useToast } from "src/components/ui/use-toast";
 import FormTextField from "src/components/ui/form-textfield";
 import FormImageUpload from "src/components/ui/form-image-upload";
 import { Form } from "@/components/ui/form";
+import { type products } from "@/server/db/schema";
 
-export default function AddEditProductForm() {
+type Product = typeof products.$inferSelect;
+
+type Props = {
+  product?: Product;
+};
+
+export default function AddEditProductForm({ product }: Props) {
   const form = useForm<ProductFields>({
     resolver: zodResolver(productSchema),
+    defaultValues: product,
   });
 
   const { handleSubmit, control } = form;
   const toast = useToast();
 
-  const createProduct = api.product.create.useMutation();
+  const createOrUpdateProduct = api.product.createOrUpdate.useMutation();
 
   const onSubmit = async (data: ProductFields) => {
-    createProduct.mutate(data, {
-      onSuccess: () => {
-        toast.toast({ title: "Product created successfully" });
+    createOrUpdateProduct.mutate(
+      {
+        ...data,
+        productId: product?.id,
       },
-      onError: (error) => {
-        toast.toast({
-          title: "Failed to create product",
-          description: error.message,
-        });
+      {
+        onSuccess: () => {
+          toast.toast({
+            title: product?.id ? "Product updated" : "New product created",
+          });
+        },
+        onError: (error) => {
+          toast.toast({
+            title: product?.id
+              ? "Failed to edit product"
+              : "Failed to create product",
+            description: error.message,
+          });
+        },
       },
-    });
+    );
   };
 
   return (

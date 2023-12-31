@@ -1,4 +1,4 @@
-import { ProductFields, productSchema } from "@/lib/schemas/product";
+import { productSchema } from "@/lib/schemas/product";
 import {
   authenticatedProcedure,
   createTRPCRouter,
@@ -8,7 +8,7 @@ import {
 import { db } from "@/server/db";
 import { products, shops } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 const productIdInput = z.object({
@@ -21,7 +21,13 @@ const ownProductProcedure = authenticatedProcedure
     const result = await db
       .select({})
       .from(products)
-      .innerJoin(shops, eq(shops.id, products.id));
+      .innerJoin(shops, eq(shops.id, products.shopId))
+      .where(
+        and(
+          eq(shops.userId, opts.ctx.auth.userId),
+          eq(products.id, opts.input.productId),
+        ),
+      );
 
     if (!result.length) {
       throw new TRPCError({ code: "NOT_FOUND" });
@@ -54,6 +60,42 @@ export const productRouter = createTRPCRouter({
         .where(eq(products.id, input.productId));
     }),
 
+  createOrUpdate: shopOwnerProcedure
+    .input(z.object({ productId: z.number().optional() }))
+    .input(productSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (input.productId) {
+        const result = await db
+          .select()
+          .from(products)
+          .where(
+            and(
+              eq(products.id, input.productId),
+              eq(products.shopId, ctx.shopId),
+            ),
+          );
+
+        if (!result.length) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+          });
+        }
+      }
+
+      const { productId, ...data } = input;
+
+      await db
+        .insert(products)
+        .values({
+          ...input,
+          id: productId,
+          shopId: ctx.shopId,
+        })
+        .onDuplicateKeyUpdate({
+          set: data,
+        });
+    }),
+
   delete: ownProductProcedure.mutation(async ({ input }) => {
     await db.delete(products).where(eq(products.id, input.productId));
   }),
@@ -66,6 +108,13 @@ export const productRouter = createTRPCRouter({
   }),
 
   getDetail: publicProcedure.input(productIdInput).query(async ({ input }) => {
-    return db.select().from(products).where(eq(products.id, input.productId));
+    return db
+      .select()
+      .from(products)
+      .where(eq(products.id, input.productId))
+      .then((products) => {
+        const product = products[0];
+        return product;
+      });
   }),
 });

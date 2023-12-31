@@ -10,4 +10,5 @@ export default {
   },
   tablesFilter: ["ecomm-portfolio_*"],
   out: "migrations",
+  verbose: true,
 } satisfies Config;
