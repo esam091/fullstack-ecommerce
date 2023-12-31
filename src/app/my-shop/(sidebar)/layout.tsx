@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import SidebarLink from "./sidebar-link";
 
 export default function Layout() {
