@@ -8,6 +8,13 @@
       "when": 1704015835137,
       "tag": "0000_sloppy_gambit",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1704035947814,
+      "tag": "0001_careless_nova",
+      "breakpoints": true
     }
   ]
 }

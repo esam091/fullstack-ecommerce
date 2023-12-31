@@ -78,6 +78,8 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 import { TRPCError } from "@trpc/server";
 import { auth } from "@clerk/nextjs";
+import { shops } from "../db/schema";
+import { eq } from "drizzle-orm";
 
 const isAuthed = t.middleware(async (opts) => {
   const { ctx } = opts;
@@ -92,3 +94,25 @@ const isAuthed = t.middleware(async (opts) => {
 });
 
 export const authenticatedProcedure = publicProcedure.use(isAuthed);
+
+export const shopOwnerProcedure = authenticatedProcedure.use(async (opts) => {
+  const result = await db
+    .select({ shopId: shops.id })
+    .from(shops)
+    .where(eq(shops.userId, opts.ctx.auth.userId));
+
+  const shopId = result[0]?.shopId;
+
+  if (!shopId) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "User has no shop yet",
+    });
+  }
+
+  return opts.next({
+    ctx: {
+      shopId,
+    },
+  });
+});
