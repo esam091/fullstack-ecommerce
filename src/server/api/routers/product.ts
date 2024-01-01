@@ -37,29 +37,6 @@ const ownProductProcedure = authenticatedProcedure
   });
 
 export const productRouter = createTRPCRouter({
-  create: shopOwnerProcedure
-    .input(productSchema)
-    .mutation(async ({ ctx, input }) => {
-      await db
-        .insert(products)
-        .values({
-          ...input,
-          shopId: ctx.shopId,
-        })
-        .onDuplicateKeyUpdate({
-          set: input,
-        });
-    }),
-
-  update: ownProductProcedure
-    .input(productSchema)
-    .mutation(async ({ input }) => {
-      await db
-        .update(products)
-        .set(input)
-        .where(eq(products.id, input.productId));
-    }),
-
   createOrUpdate: shopOwnerProcedure
     .input(z.object({ productId: z.number().optional() }))
     .input(productSchema)
@@ -112,9 +89,6 @@ export const productRouter = createTRPCRouter({
       .select()
       .from(products)
       .where(eq(products.id, input.productId))
-      .then((products) => {
-        const product = products[0];
-        return product;
-      });
+      .then((products) => products[0]);
   }),
 });
