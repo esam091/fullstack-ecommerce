@@ -9,6 +9,7 @@ import {
   timestamp,
   varchar,
   double,
+  primaryKey,
 } from "drizzle-orm/mysql-core";
 
 /**
@@ -57,5 +58,39 @@ export const products = mysqlTable(
   },
   (product) => ({
     nameIndex: index("name_idx").on(product.name),
+  }),
+);
+
+export const collections = mysqlTable("collections", {
+  id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+  shopId: bigint("shopId", { mode: "number" })
+    .references(() => shops.id)
+    .notNull(),
+  name: varchar("name", { length: 50 }).notNull(),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt").onUpdateNow(),
+});
+
+export const collectionProducts = mysqlTable(
+  "collection_product",
+  {
+    collectionId: bigint("collectionId", { mode: "number" })
+      .references(() => collections.id)
+      .notNull(),
+    productId: bigint("productId", { mode: "number" })
+      .references(() => products.id)
+      .notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+  },
+  (collectionProduct) => ({
+    collectionProductPK: primaryKey(
+      collectionProduct.collectionId,
+      collectionProduct.productId,
+    ),
   }),
 );
