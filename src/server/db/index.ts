@@ -13,7 +13,7 @@ import * as schema from "./schema";
 // );
 import mysql from "mysql2/promise";
 
-const connection = await mysql.createConnection({
+export const connection = await mysql.createConnection({
   uri: env.DATABASE_URL,
 });
 
