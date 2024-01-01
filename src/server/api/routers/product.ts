@@ -19,7 +19,7 @@ const ownProductProcedure = authenticatedProcedure
   .input(productIdInput)
   .use(async (opts) => {
     const result = await db
-      .select({})
+      .select({ productId: products.id })
       .from(products)
       .innerJoin(shops, eq(shops.id, products.shopId))
       .where(

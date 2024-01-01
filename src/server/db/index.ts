@@ -17,4 +17,8 @@ const connection = await mysql.createConnection({
   uri: env.DATABASE_URL,
 });
 
-export const db = drizzle(connection, { schema, mode: "default" });
+export const db = drizzle(connection, {
+  schema,
+  mode: "default",
+  logger: true,
+});
