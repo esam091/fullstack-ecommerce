@@ -8,6 +8,7 @@ import FormTextField from "src/components/ui/form-textfield";
 import FormImageUpload from "src/components/ui/form-image-upload";
 import { Form } from "@/components/ui/form";
 import { type products } from "@/server/db/schema";
+import FormTextarea from "@/components/ui/form-textarea";
 
 type Product = typeof products.$inferSelect;
 
@@ -55,7 +56,7 @@ export default function AddEditProductForm({ product }: Props) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormTextField control={control} name="name" label="Product Name" />
 
-        <FormTextField
+        <FormTextarea
           control={control}
           name="description"
           label="Product Description"
