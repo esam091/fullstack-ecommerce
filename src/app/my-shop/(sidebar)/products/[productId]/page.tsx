@@ -1,5 +1,5 @@
 import { api } from "@/trpc/server";
-import AddEditProductForm from "../../add-edit-product-form";
+import AddEditProductForm from "../add-edit-product-form";
 import { notFound } from "next/navigation";
 
 export default async function Page({

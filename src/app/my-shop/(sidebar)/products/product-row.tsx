@@ -1,11 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { TableCell, TableRow } from "@/components/ui/table";
 import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { MoreVertical } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   product: typeof products.$inferSelect;
@@ -29,7 +37,22 @@ export default function ProductRow({ product }: Props) {
       <TableCell>{product.description}</TableCell>
       <TableCell>$ {product.price}</TableCell>
       <TableCell>
-        <Button
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={"ghost"} size={"icon"}>
+              <MoreVertical className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem asChild>
+              <Link href={`/my-shop/products/${product.id}`}>Edit</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive">
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {/* <Button
           onClick={() =>
             deleteProduct.mutate(
               { productId: product.id },
@@ -41,7 +64,7 @@ export default function ProductRow({ product }: Props) {
           }
         >
           Delete
-        </Button>
+        </Button> */}
       </TableCell>
     </TableRow>
   );
