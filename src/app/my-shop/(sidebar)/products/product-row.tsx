@@ -21,7 +21,6 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
 import { api } from "@/trpc/react";
-import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { MoreVertical, Pencil, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

@@ -34,19 +34,13 @@ export default function FormTextField<
   ...rest
 }: FormTextFieldProps<TFieldValues, TName>) {
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input {...rest} {...field} />
-          </FormControl>
-          <FormDescription>{description}</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <FormItem>
+      <FormLabel>{label}</FormLabel>
+      <FormControl>
+        <Input {...rest} {...control.register(name)} />
+      </FormControl>
+      <FormDescription>{description}</FormDescription>
+      <FormMessage />
+    </FormItem>
   );
 }
