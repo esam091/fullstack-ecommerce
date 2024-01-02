@@ -40,7 +40,10 @@ export default function FormImageUpload<
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <ImageUploader onImageIdChange={(id) => field.onChange(id)} />
+            <ImageUploader
+              onImageIdChange={(id) => field.onChange(id)}
+              value={field.value}
+            />
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />

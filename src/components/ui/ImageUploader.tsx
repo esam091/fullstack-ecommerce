@@ -13,20 +13,20 @@ const imagePrefix =
 
 type ImageUploaderProps = {
   onImageIdChange(id: string | null): void;
+  value?: string;
 };
 
-function ImageUploader({ onImageIdChange }: ImageUploaderProps) {
+function ImageUploader({ onImageIdChange, value }: ImageUploaderProps) {
   const {
     progress,
     isLoading,
-    data,
     mutate: upload,
     isIdle,
     reset,
   } = useImageUpload();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    disabled: !isIdle,
+    disabled: !!value,
     maxFiles: 1,
     accept: {
       "image/*": [".png", ".jpeg", ".jpg", ".webp"],
@@ -49,10 +49,10 @@ function ImageUploader({ onImageIdChange }: ImageUploaderProps) {
       className={clsx(rootClassName, "group relative h-28 w-28")}
     >
       <input {...getInputProps()} />
-      {data ? (
+      {value ? (
         <>
           <Image
-            src={`${imagePrefix}${data}`}
+            src={`${imagePrefix}${value}`}
             alt="Uploaded"
             className="h-full w-full rounded-md bg-cover shadow-sm"
             width={112}
