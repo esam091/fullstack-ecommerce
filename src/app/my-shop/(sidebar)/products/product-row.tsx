@@ -22,7 +22,7 @@ import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Pencil, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -58,27 +58,16 @@ export default function ProductRow({ product }: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem asChild>
-              <Link href={`/my-shop/products/${product.id}`}>Edit</Link>
+              <Link href={`/my-shop/products/${product.id}`}>
+                <Pencil className="mr-2 h-4 w-4" /> Edit
+              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
-              Delete
+              <Trash className="mr-2 h-4 w-4" /> Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        {/* <Button
-          onClick={() =>
-            deleteProduct.mutate(
-              { productId: product.id },
-              {
-                onSuccess: () => alert("success"),
-                onError: (error) => alert("error " + error.message),
-              },
-            )
-          }
-        >
-          Delete
-        </Button> */}
       </TableCell>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
