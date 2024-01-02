@@ -1,7 +1,27 @@
 import { type PropsWithChildren } from "react";
 import SidebarLink from "./sidebar-link";
+import { db } from "@/server/db";
+import { shops } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
+import { auth, redirectToSignIn } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
-export default function Layout(props: PropsWithChildren) {
+export default async function Layout(props: PropsWithChildren) {
+  const userId = auth().userId;
+  if (!userId) {
+    await redirectToSignIn();
+    return;
+  }
+
+  const result = await db
+    .select({ id: shops.id })
+    .from(shops)
+    .where(eq(shops.userId, userId));
+
+  if (!result.length) {
+    redirect("/my-shop/create");
+  }
+
   return (
     <div>
       <div className="space-y-0.5">
