@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,7 @@ import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { MoreVertical } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 type Props = {
   product: typeof products.$inferSelect;
@@ -32,6 +33,7 @@ type Props = {
 
 export default function ProductRow({ product }: Props) {
   const deleteProduct = api.product.delete.useMutation();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   return (
     <TableRow>
@@ -59,29 +61,8 @@ export default function ProductRow({ product }: Props) {
               <Link href={`/my-shop/products/${product.id}`}>Edit</Link>
             </DropdownMenuItem>
 
-            <DropdownMenuItem asChild>
-              <AlertDialog>
-                <AlertDialogTrigger className="text-destructive">
-                  Delete
-                </AlertDialogTrigger>
-
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete this product?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      The product will be deleted permanently. This action
-                      cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction asChild>
-                      <Button variant={"destructive"}>Continue</Button>
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+            <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
+              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -99,6 +80,40 @@ export default function ProductRow({ product }: Props) {
           Delete
         </Button> */}
       </TableCell>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this product?</AlertDialogTitle>
+            <AlertDialogDescription>
+              The product will be deleted permanently. This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              asChild
+              className={buttonVariants({ variant: "destructive" })}
+            >
+              <Button
+                onClick={() =>
+                  deleteProduct.mutate(
+                    { productId: product.id },
+                    {
+                      onSuccess: () => alert("success"),
+                      onError: (error) => alert("error " + error.message),
+                    },
+                  )
+                }
+              >
+                Continue
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </TableRow>
   );
 }
