@@ -1,5 +1,15 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +21,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { MoreVertical } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,8 +58,30 @@ export default function ProductRow({ product }: Props) {
             <DropdownMenuItem asChild>
               <Link href={`/my-shop/products/${product.id}`}>Edit</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive">
-              Delete
+
+            <DropdownMenuItem asChild>
+              <AlertDialog>
+                <AlertDialogTrigger className="text-destructive">
+                  Delete
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this product?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      The product will be deleted permanently. This action
+                      cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button variant={"destructive"}>Continue</Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
