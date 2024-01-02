@@ -2,6 +2,13 @@ import { api } from "@/trpc/server";
 import ProductRow from "./product-row";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default async function Page() {
   const products = await api.product.myProducts.query();
@@ -22,9 +29,22 @@ export default async function Page() {
 
   return (
     <div>
-      {products.map((product) => (
-        <ProductRow product={product} key={product.id} />
-      ))}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {products.map((product) => (
+            <ProductRow product={product} key={product.id} />
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
