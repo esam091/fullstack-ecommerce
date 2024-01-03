@@ -49,7 +49,6 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
   } = useCombobox({
     items: products,
     onSelectedItemChange(changes) {
-      alert("change");
       reset();
     },
   });
