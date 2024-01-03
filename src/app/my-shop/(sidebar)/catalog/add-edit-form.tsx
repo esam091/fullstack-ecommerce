@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { type products } from "@/server/db/schema";
 import { PopoverAnchor } from "@radix-ui/react-popover";
+import clsx from "clsx";
 import Downshift from "downshift";
 import { useId } from "react";
 
@@ -46,6 +47,7 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
         getItemProps,
         getRootProps,
         inputValue,
+        highlightedIndex,
       }) => (
         <div
           {...getRootProps({}, { suppressRefError: true })}
@@ -73,6 +75,9 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
                     <li
                       key={product.id}
                       {...getItemProps({ item: product, index })}
+                      className={clsx(
+                        highlightedIndex === index && "bg-orange-200",
+                      )}
                     >
                       {product.id} {product.name}
                     </li>
