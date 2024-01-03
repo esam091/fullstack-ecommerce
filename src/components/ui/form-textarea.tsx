@@ -35,9 +35,7 @@ export default function FormTextarea<
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>
-      <FormControl>
-        <Textarea {...rest} {...control.register(name)} />
-      </FormControl>
+      <Textarea {...rest} {...control.register(name)} />
       <FormDescription>{description}</FormDescription>
       <FormMessage />
     </FormItem>

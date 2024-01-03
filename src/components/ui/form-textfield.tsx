@@ -1,7 +1,6 @@
 import {
   FormControl,
   FormDescription,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
@@ -36,9 +35,7 @@ export default function FormTextField<
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>
-      <FormControl>
-        <Input {...rest} {...control.register(name)} />
-      </FormControl>
+      <Input {...rest} {...control.register(name)} />
       <FormDescription>{description}</FormDescription>
       <FormMessage />
     </FormItem>
