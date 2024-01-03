@@ -5,10 +5,12 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
+import { Checkbox } from "@/components/ui/checkbox";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
 import { useCombobox, useMultipleSelection } from "downshift";
 import Image from "next/image";
+import React, { useState } from "react";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
@@ -31,6 +33,7 @@ type ProductAutocompleteProps = {
 };
 
 function ProductAutocomplete({ products }: ProductAutocompleteProps) {
+  const [inputValue, setInputValue] = useState("");
   const {
     getDropdownProps,
     removeSelectedItem,
@@ -38,17 +41,24 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
     addSelectedItem,
   } = useMultipleSelection({});
 
+  const filteredProducts = products.filter(
+    (product) =>
+      !!inputValue &&
+      product.name.toLowerCase().includes(inputValue.toLowerCase()),
+  );
+
   const {
     getLabelProps,
     getInputProps,
     isOpen,
     getMenuProps,
     getItemProps,
-    inputValue,
     highlightedIndex,
-    reset,
   } = useCombobox({
-    items: products,
+    inputValue,
+    selectedItem: null,
+    items: filteredProducts,
+    itemToString: (product) => product?.name ?? "",
     onSelectedItemChange({ selectedItem: newSelectedItem }) {
       if (newSelectedItem) {
         if (selectedItems.includes(newSelectedItem)) {
@@ -57,13 +67,35 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
           addSelectedItem(newSelectedItem);
         }
       }
-      reset();
+    },
+    stateReducer(state, actionAndChanges) {
+      const { changes, type } = actionAndChanges;
+
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.ItemClick:
+          return {
+            ...changes,
+            isOpen: true, // keep the menu open after selection.
+          };
+        default:
+          return changes;
+      }
+    },
+    onStateChange({ inputValue: newInputValue, type }) {
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputChange:
+          setInputValue(newInputValue ?? "");
+
+          break;
+        default:
+          break;
+      }
     },
   });
 
   return (
     <div>
-      <div>{JSON.stringify(selectedItems)}</div>
       <Label {...getLabelProps()}>Select products</Label>
       <Input
         {...getInputProps(
@@ -81,35 +113,33 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <ul {...getMenuProps({}, { suppressRefError: true })}>
-            {products
-              .filter(
-                (product) =>
-                  !!inputValue &&
-                  product.name.toLowerCase().includes(inputValue.toLowerCase()),
-              )
-              .map((product, index) => (
-                <li
-                  key={product.id}
-                  {...getItemProps({ item: product, index })}
-                  className={clsx(
-                    "flex cursor-pointer items-center p-4",
-                    highlightedIndex === index && "bg-muted",
-                  )}
-                >
-                  <Image
-                    alt={`Image of ${product.name}`}
-                    className="mr-3 rounded-md"
-                    width={50}
-                    height={50}
-                    src={imageUrl(product.image)}
-                  />
+            {filteredProducts.map((product, index) => (
+              <li
+                key={product.id}
+                {...getItemProps({ item: product, index })}
+                className={clsx(
+                  "flex cursor-pointer items-center p-4",
+                  highlightedIndex === index && "bg-muted",
+                )}
+              >
+                <Image
+                  alt={`Image of ${product.name}`}
+                  className="mr-3 rounded-md"
+                  width={50}
+                  height={50}
+                  src={imageUrl(product.image)}
+                />
 
-                  <div>
-                    <div className="font-semibold">{product.name}</div>
-                    <div className="text-sm">$ {product.price}</div>
+                <div className="flex-1">
+                  <div className="font-semibold">
+                    {product.name} {index}
                   </div>
-                </li>
-              ))}
+                  <div className="text-sm">$ {product.price}</div>
+                </div>
+
+                <Checkbox checked={selectedItems.includes(product)} />
+              </li>
+            ))}
           </ul>
         </PopoverContent>
       </Popover>
