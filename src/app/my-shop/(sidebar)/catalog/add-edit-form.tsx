@@ -2,18 +2,13 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent } from "@/components/ui/popover";
 import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
-import Downshift, { useCombobox, useMultipleSelection } from "downshift";
+import { useCombobox, useMultipleSelection } from "downshift";
 import Image from "next/image";
-import { useId, useState } from "react";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
@@ -54,23 +49,15 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
     reset,
   } = useCombobox({
     items: products,
-    onStateChange({ type, selectedItem: newSelectedItem }) {
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-          if (newSelectedItem) {
-            console.log("new item", newSelectedItem.id, newSelectedItem.name);
-            if (selectedItems.includes(newSelectedItem)) {
-              removeSelectedItem(newSelectedItem);
-            } else {
-              addSelectedItem(newSelectedItem);
-            }
-          }
-          console.log("type", type);
-          reset();
-        default:
-          break;
+    onSelectedItemChange({ selectedItem: newSelectedItem }) {
+      if (newSelectedItem) {
+        if (selectedItems.includes(newSelectedItem)) {
+          removeSelectedItem(newSelectedItem);
+        } else {
+          addSelectedItem(newSelectedItem);
+        }
       }
+      reset();
     },
   });
 
