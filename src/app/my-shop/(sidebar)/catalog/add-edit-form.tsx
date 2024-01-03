@@ -2,7 +2,13 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { type products } from "@/server/db/schema";
+import { PopoverAnchor } from "@radix-ui/react-popover";
 import Downshift from "downshift";
 import { useId } from "react";
 
@@ -38,22 +44,42 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
         isOpen,
         getMenuProps,
         getItemProps,
+        getRootProps,
+        inputValue,
       }) => (
-        <div>
+        <div
+          {...getRootProps({}, { suppressRefError: true })}
+          className="bg-slate-500"
+        >
           <Label {...getLabelProps()}>Select products</Label>
           <Input {...getInputProps()} />
 
-          <ul {...getMenuProps()}>
-            {isOpen &&
-              products.map((product, index) => (
-                <li
-                  key={product.id}
-                  {...getItemProps({ item: product, index })}
-                >
-                  {product.id} {product.name}
-                </li>
-              ))}
-          </ul>
+          <Popover open={isOpen} {...getMenuProps()}>
+            <PopoverAnchor />
+            <PopoverContent
+              align="start"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+            >
+              <ul {...getMenuProps({}, { suppressRefError: true })}>
+                {products
+                  .filter(
+                    (product) =>
+                      !!inputValue &&
+                      product.name
+                        .toLowerCase()
+                        .includes(inputValue.toLowerCase()),
+                  )
+                  .map((product, index) => (
+                    <li
+                      key={product.id}
+                      {...getItemProps({ item: product, index })}
+                    >
+                      {product.id} {product.name}
+                    </li>
+                  ))}
+              </ul>
+            </PopoverContent>
+          </Popover>
         </div>
       )}
     </Downshift>
