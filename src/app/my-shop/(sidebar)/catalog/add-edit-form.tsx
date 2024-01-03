@@ -11,9 +11,9 @@ import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
-import Downshift, { useCombobox } from "downshift";
+import Downshift, { useCombobox, useMultipleSelection } from "downshift";
 import Image from "next/image";
-import { useId } from "react";
+import { useId, useState } from "react";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
@@ -37,26 +37,54 @@ type ProductAutocompleteProps = {
 
 function ProductAutocomplete({ products }: ProductAutocompleteProps) {
   const {
+    getDropdownProps,
+    removeSelectedItem,
+    selectedItems,
+    addSelectedItem,
+  } = useMultipleSelection({});
+
+  const {
     getLabelProps,
     getInputProps,
     isOpen,
     getMenuProps,
     getItemProps,
-
     inputValue,
     highlightedIndex,
     reset,
   } = useCombobox({
     items: products,
-    onSelectedItemChange(changes) {
-      reset();
+    onStateChange({ type, selectedItem: newSelectedItem }) {
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.ItemClick:
+          if (newSelectedItem) {
+            console.log("new item", newSelectedItem.id, newSelectedItem.name);
+            if (selectedItems.includes(newSelectedItem)) {
+              removeSelectedItem(newSelectedItem);
+            } else {
+              addSelectedItem(newSelectedItem);
+            }
+          }
+          console.log("type", type);
+          reset();
+        default:
+          break;
+      }
     },
   });
 
   return (
     <div>
+      <div>{JSON.stringify(selectedItems)}</div>
       <Label {...getLabelProps()}>Select products</Label>
-      <Input {...getInputProps()} />
+      <Input
+        {...getInputProps(
+          getDropdownProps({
+            preventKeyAction: true,
+          }),
+        )}
+      />
 
       <Popover open={isOpen} {...getMenuProps()}>
         <PopoverAnchor />
