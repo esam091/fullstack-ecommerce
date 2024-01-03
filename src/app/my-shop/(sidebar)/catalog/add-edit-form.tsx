@@ -7,10 +7,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import imageUrl from "@/lib/imageUrl";
 import { type products } from "@/server/db/schema";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
 import Downshift from "downshift";
+import Image from "next/image";
 import { useId } from "react";
 
 type Props = {
@@ -49,16 +51,14 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
         inputValue,
         highlightedIndex,
       }) => (
-        <div
-          {...getRootProps({}, { suppressRefError: true })}
-          className="bg-slate-500"
-        >
+        <div {...getRootProps({}, { suppressRefError: true })}>
           <Label {...getLabelProps()}>Select products</Label>
           <Input {...getInputProps()} />
 
           <Popover open={isOpen} {...getMenuProps()}>
             <PopoverAnchor />
             <PopoverContent
+              className="p-0"
               align="start"
               onOpenAutoFocus={(e) => e.preventDefault()}
             >
@@ -76,10 +76,22 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
                       key={product.id}
                       {...getItemProps({ item: product, index })}
                       className={clsx(
-                        highlightedIndex === index && "bg-orange-200",
+                        "flex cursor-pointer items-center p-4",
+                        highlightedIndex === index && "bg-muted",
                       )}
                     >
-                      {product.id} {product.name}
+                      <Image
+                        alt={`Image of ${product.name}`}
+                        className="mr-3 rounded-md"
+                        width={50}
+                        height={50}
+                        src={imageUrl(product.image)}
+                      />
+
+                      <div>
+                        <div className="font-semibold">{product.name}</div>
+                        <div className="text-sm">$ {product.price}</div>
+                      </div>
                     </li>
                   ))}
               </ul>
