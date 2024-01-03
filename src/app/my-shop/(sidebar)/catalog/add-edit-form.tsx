@@ -105,7 +105,7 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
         )}
       />
 
-      <Popover open={isOpen} {...getMenuProps()}>
+      <Popover open={isOpen}>
         <PopoverAnchor />
         <PopoverContent
           className="p-0"
