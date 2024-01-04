@@ -10,14 +10,13 @@ import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
 import { useCombobox, useMultipleSelection } from "downshift";
 import Image from "next/image";
-import React, { useEffect, useMemo, useState } from "react";
-import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import React, { useMemo, useState } from "react";
+import { useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type CatalogFormSchema, catalogForm } from "@/lib/schemas/catalog";
 import { Form } from "@/components/ui/form";
 import FormTextField from "@/components/ui/form-textfield";
-import { Table, X } from "lucide-react";
-import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Props = {
