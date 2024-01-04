@@ -121,6 +121,13 @@ function ProductAutocomplete({
   products,
   onSelectedProductsChange,
 }: ProductAutocompleteProps) {
+  const { watch, setValue } = useFormContext<CatalogFormSchema>();
+
+  const selectedIds = watch("productIds");
+  const set = new Set(selectedIds);
+
+  const selectedProducts = products.filter((product) => set.has(product.id));
+
   const [inputValue, setInputValue] = useState("");
   const {
     getDropdownProps,
@@ -128,6 +135,7 @@ function ProductAutocomplete({
     selectedItems,
     addSelectedItem,
   } = useMultipleSelection<Product>({
+    selectedItems: selectedProducts,
     onSelectedItemsChange({ selectedItems }) {
       if (selectedItems) {
         onSelectedProductsChange?.(selectedItems);
@@ -155,10 +163,13 @@ function ProductAutocomplete({
     itemToString: (product) => product?.name ?? "",
     onSelectedItemChange({ selectedItem: newSelectedItem }) {
       if (newSelectedItem) {
-        if (selectedItems.includes(newSelectedItem)) {
-          removeSelectedItem(newSelectedItem);
+        if (set.has(newSelectedItem.id)) {
+          setValue(
+            "productIds",
+            selectedIds.filter((id) => id !== newSelectedItem.id),
+          );
         } else {
-          addSelectedItem(newSelectedItem);
+          setValue("productIds", [...selectedIds, newSelectedItem.id]);
         }
       }
     },
@@ -225,9 +236,7 @@ function ProductAutocomplete({
                 />
 
                 <div className="flex-1">
-                  <div className="font-semibold">
-                    {product.name} {index}
-                  </div>
+                  <div className="font-semibold">{product.name}</div>
                   <div className="text-sm">$ {product.price}</div>
                 </div>
 
