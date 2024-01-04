@@ -53,7 +53,9 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
             {
               onSuccess() {
                 toast.toast({
-                  description: "New catalog created",
+                  description: catalog?.id
+                    ? "Changes saved"
+                    : "New catalog created",
                 });
               },
               onError() {
