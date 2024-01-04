@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import imageUrl from "@/lib/imageUrl";
-import { catalog, type products } from "@/server/db/schema";
+import { type products } from "@/server/db/schema";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
@@ -23,7 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
-  catalog?: CatalogFormSchema;
+  catalog?: CatalogFormSchema & { id: number };
 };
 
 export default function CatalogAddEditForm({ products, catalog }: Props) {
@@ -45,20 +45,26 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
     <Form {...form}>
       <form
         onSubmit={handleSubmit((data) => {
-          submit(data, {
-            onSuccess() {
-              toast.toast({
-                description: "New catalog created",
-              });
+          submit(
+            {
+              ...data,
+              collectionId: catalog?.id,
             },
-            onError() {
-              toast.toast({
-                title: "Error",
-                description: "Something went wrong",
-                variant: "destructive",
-              });
+            {
+              onSuccess() {
+                toast.toast({
+                  description: "New catalog created",
+                });
+              },
+              onError() {
+                toast.toast({
+                  title: "Error",
+                  description: "Something went wrong",
+                  variant: "destructive",
+                });
+              },
             },
-          });
+          );
         })}
       >
         <FormTextField control={control} name="name" label="Catalog Name" />
