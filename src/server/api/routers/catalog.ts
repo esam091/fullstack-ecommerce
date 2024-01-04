@@ -125,7 +125,7 @@ export const catalogRouter = createTRPCRouter({
         console.log("insert");
         await tx.insert(catalogProducts).values(
           data.productIds.map((productId) => ({
-            collectionId: id,
+            catalogId: id,
             productId,
           })),
         );
@@ -144,7 +144,7 @@ export const catalogRouter = createTRPCRouter({
     }),
 
   addProduct: ownedProductAndCollection.mutation(async ({ input }) => {
-    await db.insert(catalogProducts).values(input);
+    await db.insert(catalogProducts).values([]);
   }),
 
   removeProduct: ownedProductAndCollection.mutation(async ({ input }) => {
