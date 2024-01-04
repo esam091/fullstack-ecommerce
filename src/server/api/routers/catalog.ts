@@ -105,6 +105,7 @@ export const catalogRouter = createTRPCRouter({
         const upsert = await tx
           .insert(catalog)
           .values({
+            id: collectionId,
             name: input.name,
             shopId: ctx.shopId,
           })
