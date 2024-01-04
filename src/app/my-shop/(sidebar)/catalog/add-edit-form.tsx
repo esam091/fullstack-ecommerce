@@ -18,6 +18,8 @@ import { Form } from "@/components/ui/form";
 import FormTextField from "@/components/ui/form-textfield";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { api } from "@/trpc/react";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
@@ -31,11 +33,32 @@ export default function CatalogAddEditForm({ products }: Props) {
     },
   });
 
-  const { control, setValue } = form;
+  const toast = useToast();
+
+  const { control, setValue, handleSubmit } = form;
+
+  const { mutate: submit } = api.catalog.createOrUpdate.useMutation();
 
   return (
     <Form {...form}>
-      <form>
+      <form
+        onSubmit={handleSubmit((data) => {
+          submit(data, {
+            onSuccess() {
+              toast.toast({
+                description: "New catalog created",
+              });
+            },
+            onError() {
+              toast.toast({
+                title: "Error",
+                description: "Something went wrong",
+                variant: "destructive",
+              });
+            },
+          });
+        })}
+      >
         <FormTextField control={control} name="name" label="Catalog Name" />
 
         <ProductAutocomplete
@@ -49,6 +72,8 @@ export default function CatalogAddEditForm({ products }: Props) {
         />
 
         <SelectedProducts products={products} />
+
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

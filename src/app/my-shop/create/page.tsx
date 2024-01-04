@@ -46,6 +46,7 @@ export default function Page() {
           toast.toast({
             title: "Failed to create shop",
             description: error.message,
+            variant: "destructive",
           });
         },
       },

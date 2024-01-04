@@ -55,7 +55,7 @@ async function ensureUserOwnsCollection({
   userId: string;
 }) {
   const result = await db
-    .select({})
+    .select({ id: shops.id })
     .from(shops)
     .innerJoin(collections, eq(shops.id, collections.shopId))
     .where(
@@ -107,6 +107,7 @@ export const catalogRouter = createTRPCRouter({
       }
 
       await db.transaction(async (tx) => {
+        console.log("upsert");
         const upsert = await tx
           .insert(collections)
           .values({
@@ -114,15 +115,19 @@ export const catalogRouter = createTRPCRouter({
             shopId: ctx.shopId,
           })
           .onDuplicateKeyUpdate({
-            set: data,
+            set: {
+              name: data.name,
+            },
           });
 
         const id = collectionId ?? upsert[0].insertId;
 
+        console.log("delete");
         await tx
           .delete(collectionProducts)
           .where(eq(collectionProducts.collectionId, id));
 
+        console.log("insert");
         await tx.insert(collectionProducts).values(
           data.productIds.map((productId) => ({
             collectionId: id,

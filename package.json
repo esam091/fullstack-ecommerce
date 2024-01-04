@@ -7,10 +7,10 @@
     "build": "next build",
     "db:push": "dotenv drizzle-kit push:mysql",
     "db:studio": "dotenv drizzle-kit studio",
-    "db:generate-migrations": "dotenv drizzle-kit generate:mysql",
+    "db:generate": "dotenv drizzle-kit generate:mysql",
     "dev": "next dev",
     "lint": "next lint",
-    "migrate": "dotenv tsx ./migrate.ts",
+    "db:migrate": "dotenv tsx ./migrate.ts",
     "start": "next start"
   },
   "dependencies": {
