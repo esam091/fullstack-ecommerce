@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1704015835137,
-      "tag": "0000_sloppy_gambit",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1704035947814,
-      "tag": "0001_careless_nova",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1704109777274,
-      "tag": "0002_magenta_tarantula",
+      "when": 1704376268147,
+      "tag": "0000_ancient_bloodscream",
       "breakpoints": true
     }
   ]

@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "73ed9303-106a-4ccc-bd2e-5a775b3769fb",
+  "id": "e1a31c48-138e-4e10-aa5e-d5237c4936cf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "ecomm-portfolio_product": {
-      "name": "ecomm-portfolio_product",
+    "ep_catalog": {
+      "name": "ep_catalog",
       "columns": {
         "id": {
           "name": "id",
@@ -18,39 +18,180 @@
           "name": "shopId",
           "type": "bigint",
           "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
           "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ep_catalog_shopId_ep_shop_id_fk": {
+          "name": "ep_catalog_shopId_ep_shop_id_fk",
+          "tableFrom": "ep_catalog",
+          "tableTo": "ep_shop",
+          "columnsFrom": [
+            "shopId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ep_catalog_id": {
+          "name": "ep_catalog_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "ep_collection_product": {
+      "name": "ep_collection_product",
+      "columns": {
+        "catalogId": {
+          "name": "catalogId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "productId": {
+          "name": "productId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ep_collection_product_catalogId_ep_catalog_id_fk": {
+          "name": "ep_collection_product_catalogId_ep_catalog_id_fk",
+          "tableFrom": "ep_collection_product",
+          "tableTo": "ep_catalog",
+          "columnsFrom": [
+            "catalogId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ep_collection_product_productId_ep_product_id_fk": {
+          "name": "ep_collection_product_productId_ep_product_id_fk",
+          "tableFrom": "ep_collection_product",
+          "tableTo": "ep_product",
+          "columnsFrom": [
+            "productId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ep_collection_product_catalogId_productId": {
+          "name": "ep_collection_product_catalogId_productId",
+          "columns": [
+            "catalogId",
+            "productId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "ep_product": {
+      "name": "ep_product",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "shopId": {
+          "name": "shopId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "description": {
           "name": "description",
           "type": "varchar(500)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "image": {
           "name": "image",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "price": {
           "name": "price",
-          "type": "int",
+          "type": "double",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -76,10 +217,10 @@
         }
       },
       "foreignKeys": {
-        "ecomm-portfolio_product_shopId_ecomm-portfolio_shop_id_fk": {
-          "name": "ecomm-portfolio_product_shopId_ecomm-portfolio_shop_id_fk",
-          "tableFrom": "ecomm-portfolio_product",
-          "tableTo": "ecomm-portfolio_shop",
+        "ep_product_shopId_ep_shop_id_fk": {
+          "name": "ep_product_shopId_ep_shop_id_fk",
+          "tableFrom": "ep_product",
+          "tableTo": "ep_shop",
           "columnsFrom": [
             "shopId"
           ],
@@ -91,8 +232,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "ecomm-portfolio_product_id": {
-          "name": "ecomm-portfolio_product_id",
+        "ep_product_id": {
+          "name": "ep_product_id",
           "columns": [
             "id"
           ]
@@ -100,8 +241,8 @@
       },
       "uniqueConstraints": {}
     },
-    "ecomm-portfolio_shop": {
-      "name": "ecomm-portfolio_shop",
+    "ep_shop": {
+      "name": "ep_shop",
       "columns": {
         "id": {
           "name": "id",
@@ -114,32 +255,32 @@
           "name": "userId",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "name": {
           "name": "name",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "location": {
           "name": "location",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "image": {
           "name": "image",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -166,16 +307,16 @@
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "ecomm-portfolio_shop_id": {
-          "name": "ecomm-portfolio_shop_id",
+        "ep_shop_id": {
+          "name": "ep_shop_id",
           "columns": [
             "id"
           ]
         }
       },
       "uniqueConstraints": {
-        "ecomm-portfolio_shop_userId_unique": {
-          "name": "ecomm-portfolio_shop_userId_unique",
+        "ep_shop_userId_unique": {
+          "name": "ep_shop_userId_unique",
           "columns": [
             "userId"
           ]

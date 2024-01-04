@@ -18,9 +18,7 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const mysqlTable = mysqlTableCreator(
-  (name) => `ecomm-portfolio_${name}`,
-);
+export const mysqlTable = mysqlTableCreator((name) => `ep_${name}`);
 
 export const shops = mysqlTable(
   "shop",
@@ -30,7 +28,7 @@ export const shops = mysqlTable(
     name: varchar("name", { length: 256 }).notNull(),
     location: varchar("location", { length: 100 }).notNull(),
     image: varchar("image", { length: 100 }).notNull(),
-    createdAt: timestamp("created_at")
+    createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
@@ -51,7 +49,7 @@ export const products = mysqlTable(
     description: varchar("description", { length: 500 }).notNull(),
     image: varchar("image", { length: 36 }).notNull(),
     price: double("price").notNull(),
-    createdAt: timestamp("created_at")
+    createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
@@ -61,36 +59,36 @@ export const products = mysqlTable(
   }),
 );
 
-export const collections = mysqlTable("collections", {
+export const catalog = mysqlTable("catalog", {
   id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
   shopId: bigint("shopId", { mode: "number" })
     .references(() => shops.id)
     .notNull(),
   name: varchar("name", { length: 50 }).notNull(),
-  createdAt: timestamp("created_at")
+  createdAt: timestamp("createdAt")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt").onUpdateNow(),
 });
 
-export const collectionProducts = mysqlTable(
+export const catalogProducts = mysqlTable(
   "collection_product",
   {
-    collectionId: bigint("collectionId", { mode: "number" })
-      .references(() => collections.id)
+    catalogId: bigint("catalogId", { mode: "number" })
+      .references(() => catalog.id)
       .notNull(),
     productId: bigint("productId", { mode: "number" })
       .references(() => products.id)
       .notNull(),
-    createdAt: timestamp("created_at")
+    createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
-  (collectionProduct) => ({
+  (catalogProduct) => ({
     collectionProductPK: primaryKey(
-      collectionProduct.collectionId,
-      collectionProduct.productId,
+      catalogProduct.catalogId,
+      catalogProduct.productId,
     ),
   }),
 );

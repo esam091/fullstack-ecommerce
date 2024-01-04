@@ -9,6 +9,7 @@ import FormTextField from "@/components/ui/form-textfield";
 import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
 import FormImageUpload from "@/components/ui/form-image-upload";
+import { useRouter } from "next/navigation";
 
 const fromSchema = z.object({
   name: z
@@ -35,12 +36,15 @@ export default function Page() {
 
   const createShop = api.shop.createShop.useMutation();
 
+  const router = useRouter();
+
   const onSubmit = async (data: z.infer<typeof fromSchema>) => {
     createShop.mutate(
       { ...data },
       {
         onSuccess: () => {
           toast.toast({ title: "Shop created successfully" });
+          router.replace("/my-shop");
         },
         onError: (error) => {
           toast.toast({

@@ -5,12 +5,7 @@ import {
   shopOwnerProcedure,
 } from "../trpc";
 import { db } from "@/server/db";
-import {
-  collectionProducts,
-  collections,
-  products,
-  shops,
-} from "@/server/db/schema";
+import { catalogProducts, catalog, products, shops } from "@/server/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { catalogForm } from "@/lib/schemas/catalog";
@@ -29,12 +24,12 @@ const ownedProductAndCollection = authenticatedProcedure
       })
       .from(products)
       .innerJoin(shops, eq(shops.id, products.shopId))
-      .innerJoin(collections, eq(collections.shopId, shops.id))
+      .innerJoin(catalog, eq(catalog.shopId, shops.id))
       .where(
         and(
           eq(shops.userId, opts.ctx.auth.userId),
           eq(products.id, opts.input.productId),
-          eq(collections.id, opts.input.collectionId),
+          eq(catalog.id, opts.input.collectionId),
         ),
       );
 
@@ -57,12 +52,12 @@ async function ensureUserOwnsCollection({
   const result = await db
     .select({ id: shops.id })
     .from(shops)
-    .innerJoin(collections, eq(shops.id, collections.shopId))
+    .innerJoin(catalog, eq(shops.id, catalog.shopId))
     .where(
       and(
         eq(shops.userId, userId),
-        eq(collections.shopId, shops.id),
-        eq(collections.id, collectionId),
+        eq(catalog.shopId, shops.id),
+        eq(catalog.id, collectionId),
       ),
     );
 
@@ -109,7 +104,7 @@ export const catalogRouter = createTRPCRouter({
       await db.transaction(async (tx) => {
         console.log("upsert");
         const upsert = await tx
-          .insert(collections)
+          .insert(catalog)
           .values({
             name: input.name,
             shopId: ctx.shopId,
@@ -124,11 +119,11 @@ export const catalogRouter = createTRPCRouter({
 
         console.log("delete");
         await tx
-          .delete(collectionProducts)
-          .where(eq(collectionProducts.collectionId, id));
+          .delete(catalogProducts)
+          .where(eq(catalogProducts.catalogId, id));
 
         console.log("insert");
-        await tx.insert(collectionProducts).values(
+        await tx.insert(catalogProducts).values(
           data.productIds.map((productId) => ({
             collectionId: id,
             productId,
@@ -145,20 +140,20 @@ export const catalogRouter = createTRPCRouter({
         collectionId: input,
       });
 
-      await db.delete(collections).where(eq(collections.id, input));
+      await db.delete(catalog).where(eq(catalog.id, input));
     }),
 
   addProduct: ownedProductAndCollection.mutation(async ({ input }) => {
-    await db.insert(collectionProducts).values(input);
+    await db.insert(catalogProducts).values(input);
   }),
 
   removeProduct: ownedProductAndCollection.mutation(async ({ input }) => {
     await db
-      .delete(collectionProducts)
+      .delete(catalogProducts)
       .where(
         and(
-          eq(collectionProducts.productId, input.productId),
-          eq(collectionProducts.collectionId, input.collectionId),
+          eq(catalogProducts.productId, input.productId),
+          eq(catalogProducts.catalogId, input.collectionId),
         ),
       );
   }),
