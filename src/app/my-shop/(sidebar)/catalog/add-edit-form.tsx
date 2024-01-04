@@ -71,7 +71,7 @@ function SelectedProducts({ products }: { products: Product[] }) {
   return (
     <div className="space-y-3">
       {!!productIDs.length &&
-        productIDs.map((id, index) => {
+        productIDs.map((id) => {
           const product = map[id]!;
 
           return (

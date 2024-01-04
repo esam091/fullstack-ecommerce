@@ -11,8 +11,9 @@ import {
   products,
   shops,
 } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { catalogForm } from "@/lib/schemas/catalog";
 
 const ownedProductAndCollection = authenticatedProcedure
   .input(
@@ -72,18 +73,14 @@ async function ensureUserOwnsCollection({
   }
 }
 
-export const collectionRouter = createTRPCRouter({
+export const catalogRouter = createTRPCRouter({
   createOrUpdate: shopOwnerProcedure
     .input(
       z.object({
         collectionId: z.number().optional(),
       }),
     )
-    .input(
-      z.object({
-        name: z.string(),
-      }),
-    )
+    .input(catalogForm)
     .mutation(async ({ ctx, input }) => {
       const { collectionId, ...data } = input;
       if (collectionId) {
@@ -93,15 +90,46 @@ export const collectionRouter = createTRPCRouter({
         });
       }
 
-      await db
-        .insert(collections)
-        .values({
-          name: input.name,
-          shopId: ctx.shopId,
-        })
-        .onDuplicateKeyUpdate({
-          set: data,
+      const aa = await db
+        .select({ id: products.id })
+        .from(products)
+        .where(
+          and(
+            eq(products.shopId, ctx.shopId),
+            inArray(products.id, data.productIds),
+          ),
+        );
+
+      if (aa.length !== data.productIds.length) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
         });
+      }
+
+      await db.transaction(async (tx) => {
+        const upsert = await tx
+          .insert(collections)
+          .values({
+            name: input.name,
+            shopId: ctx.shopId,
+          })
+          .onDuplicateKeyUpdate({
+            set: data,
+          });
+
+        const id = collectionId ?? upsert[0].insertId;
+
+        await tx
+          .delete(collectionProducts)
+          .where(eq(collectionProducts.collectionId, id));
+
+        await tx.insert(collectionProducts).values(
+          data.productIds.map((productId) => ({
+            collectionId: id,
+            productId,
+          })),
+        );
+      });
     }),
 
   delete: authenticatedProcedure
