@@ -129,12 +129,7 @@ function ProductAutocomplete({
   const selectedProducts = products.filter((product) => set.has(product.id));
 
   const [inputValue, setInputValue] = useState("");
-  const {
-    getDropdownProps,
-    removeSelectedItem,
-    selectedItems,
-    addSelectedItem,
-  } = useMultipleSelection<Product>({
+  const { getDropdownProps, selectedItems } = useMultipleSelection<Product>({
     selectedItems: selectedProducts,
     onSelectedItemsChange({ selectedItems }) {
       if (selectedItems) {
