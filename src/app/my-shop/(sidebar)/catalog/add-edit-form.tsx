@@ -10,18 +10,102 @@ import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
 import { useCombobox, useMultipleSelection } from "downshift";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type CatalogFormSchema, catalogForm } from "@/lib/schemas/catalog";
+import { Form } from "@/components/ui/form";
+import FormTextField from "@/components/ui/form-textfield";
+import { Table, X } from "lucide-react";
+import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
 };
 
-export default function CatalogForm({ products }: Props) {
-  return (
-    <div>
-      <div>catalog form</div>
+export default function CatalogAddEditForm({ products }: Props) {
+  const form = useForm<CatalogFormSchema>({
+    resolver: zodResolver(catalogForm),
+    defaultValues: {
+      productIds: [],
+    },
+  });
 
-      <ProductAutocomplete products={products} />
+  const { control, setValue } = form;
+
+  return (
+    <Form {...form}>
+      <form>
+        <FormTextField control={control} name="name" label="Catalog Name" />
+
+        <ProductAutocomplete
+          products={products}
+          onSelectedProductsChange={(selectedProducts) =>
+            setValue(
+              "productIds",
+              selectedProducts.map((product) => product.id),
+            )
+          }
+        />
+
+        <SelectedProducts products={products} />
+      </form>
+    </Form>
+  );
+}
+
+function SelectedProducts({ products }: { products: Product[] }) {
+  const { watch, control, setValue } = useFormContext<CatalogFormSchema>();
+
+  const productIDs = watch("productIds");
+  const map = useMemo(() => {
+    const record: Record<number, Product> = {};
+
+    for (const product of products) {
+      record[product.id] = product;
+    }
+
+    return record;
+  }, [products]);
+
+  return (
+    <div className="space-y-3">
+      {!!productIDs.length &&
+        productIDs.map((id, index) => {
+          const product = map[id]!;
+
+          return (
+            <div key={id} className="flex max-w-md items-center gap-2">
+              <Image
+                src={imageUrl(product.image)}
+                width={60}
+                height={60}
+                alt={`Image of ${product.name}`}
+                className="rounded-md"
+              />
+
+              <div className="flex-1">
+                <p>{product.name}</p>
+                <p>{product.price}</p>
+              </div>
+
+              <Button
+                size={"icon"}
+                variant={"ghost"}
+                type="button"
+                onClick={() =>
+                  setValue(
+                    "productIds",
+                    productIDs.filter((productId) => productId !== id),
+                  )
+                }
+              >
+                <X />
+              </Button>
+            </div>
+          );
+        })}
     </div>
   );
 }
@@ -30,16 +114,26 @@ type Product = typeof products.$inferSelect;
 
 type ProductAutocompleteProps = {
   products: Product[];
+  onSelectedProductsChange?(products: Product[]): void;
 };
 
-function ProductAutocomplete({ products }: ProductAutocompleteProps) {
+function ProductAutocomplete({
+  products,
+  onSelectedProductsChange,
+}: ProductAutocompleteProps) {
   const [inputValue, setInputValue] = useState("");
   const {
     getDropdownProps,
     removeSelectedItem,
     selectedItems,
     addSelectedItem,
-  } = useMultipleSelection({});
+  } = useMultipleSelection<Product>({
+    onSelectedItemsChange({ selectedItems }) {
+      if (selectedItems) {
+        onSelectedProductsChange?.(selectedItems);
+      }
+    },
+  });
 
   const filteredProducts = products.filter(
     (product) =>
@@ -95,7 +189,7 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
   });
 
   return (
-    <div>
+    <div className="space-y-2">
       <Label {...getLabelProps()}>Select products</Label>
       <Input
         {...getInputProps(
@@ -125,8 +219,8 @@ function ProductAutocomplete({ products }: ProductAutocompleteProps) {
                 <Image
                   alt={`Image of ${product.name}`}
                   className="mr-3 rounded-md"
-                  width={50}
-                  height={50}
+                  width={60}
+                  height={60}
                   src={imageUrl(product.image)}
                 />
 
