@@ -102,7 +102,6 @@ export const catalogRouter = createTRPCRouter({
       }
 
       await db.transaction(async (tx) => {
-        console.log("upsert");
         const upsert = await tx
           .insert(catalog)
           .values({
@@ -117,12 +116,10 @@ export const catalogRouter = createTRPCRouter({
 
         const id = collectionId ?? upsert[0].insertId;
 
-        console.log("delete");
         await tx
           .delete(catalogProducts)
           .where(eq(catalogProducts.catalogId, id));
 
-        console.log("insert");
         await tx.insert(catalogProducts).values(
           data.productIds.map((productId) => ({
             catalogId: id,
