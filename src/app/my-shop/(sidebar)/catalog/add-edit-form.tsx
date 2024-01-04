@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import imageUrl from "@/lib/imageUrl";
-import { type products } from "@/server/db/schema";
+import { catalog, type products } from "@/server/db/schema";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
@@ -23,13 +23,15 @@ import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
+  catalog?: CatalogFormSchema;
 };
 
-export default function CatalogAddEditForm({ products }: Props) {
+export default function CatalogAddEditForm({ products, catalog }: Props) {
   const form = useForm<CatalogFormSchema>({
     resolver: zodResolver(catalogForm),
     defaultValues: {
-      productIds: [],
+      productIds: catalog?.productIds ?? [],
+      name: catalog?.name,
     },
   });
 

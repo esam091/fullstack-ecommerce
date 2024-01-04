@@ -8,6 +8,13 @@
       "when": 1704376268147,
       "tag": "0000_ancient_bloodscream",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1704382999738,
+      "tag": "0001_fast_red_wolf",
+      "breakpoints": true
     }
   ]
 }

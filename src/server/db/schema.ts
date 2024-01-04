@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   bigint,
   index,
@@ -72,7 +72,7 @@ export const catalog = mysqlTable("catalog", {
 });
 
 export const catalogProducts = mysqlTable(
-  "collection_product",
+  "catalogProduct",
   {
     catalogId: bigint("catalogId", { mode: "number" })
       .references(() => catalog.id)
@@ -90,5 +90,19 @@ export const catalogProducts = mysqlTable(
       catalogProduct.catalogId,
       catalogProduct.productId,
     ),
+  }),
+);
+
+export const catalogRelations = relations(catalog, ({ many }) => ({
+  products: many(catalogProducts),
+}));
+
+export const catalogProductRelations = relations(
+  catalogProducts,
+  ({ one }) => ({
+    catalog: one(catalog, {
+      fields: [catalogProducts.catalogId],
+      references: [catalog.id],
+    }),
   }),
 );
