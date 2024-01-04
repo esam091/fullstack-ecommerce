@@ -56,7 +56,7 @@ export default function CatalogAddEditForm({ products }: Props) {
 }
 
 function SelectedProducts({ products }: { products: Product[] }) {
-  const { watch, control, setValue } = useFormContext<CatalogFormSchema>();
+  const { watch, setValue } = useFormContext<CatalogFormSchema>();
 
   const productIDs = watch("productIds");
   const map = useMemo(() => {
