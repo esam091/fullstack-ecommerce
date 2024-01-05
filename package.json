@@ -76,5 +76,10 @@
   "ct3aMetadata": {
     "initVersion": "7.24.2"
   },
-  "packageManager": "pnpm@8.10.5"
+  "packageManager": "pnpm@8.10.5",
+  "pnpm": {
+    "patchedDependencies": {
+      "next@14.0.4": "patches/next@14.0.4.patch"
+    }
+  }
 }
