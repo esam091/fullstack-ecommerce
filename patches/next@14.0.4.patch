@@ -1,5 +1,5 @@
 diff --git a/dist/client/components/router-reducer/get-prefetch-cache-entry-status.js b/dist/client/components/router-reducer/get-prefetch-cache-entry-status.js
-index d99e5a2122ace61b75c89bac8a8fa2438bc8adc5..e73efa3d135e4e9da1fb4d96522f7167eb1ab0cb 100644
+index d99e5a2122ace61b75c89bac8a8fa2438bc8adc5..646fbc1aa2f37b78438326feee7003a4853f3117 100644
 --- a/dist/client/components/router-reducer/get-prefetch-cache-entry-status.js
 +++ b/dist/client/components/router-reducer/get-prefetch-cache-entry-status.js
 @@ -21,7 +21,7 @@ _export(exports, {
@@ -7,18 +7,18 @@ index d99e5a2122ace61b75c89bac8a8fa2438bc8adc5..e73efa3d135e4e9da1fb4d96522f7167
  });
  const FIVE_MINUTES = 5 * 60 * 1000;
 -const THIRTY_SECONDS = 30 * 1000;
-+const THIRTY_SECONDS = 1 * 1000;
++const THIRTY_SECONDS = 0;
  var PrefetchCacheEntryStatus;
  (function(PrefetchCacheEntryStatus) {
      PrefetchCacheEntryStatus["fresh"] = "fresh";
 diff --git a/dist/esm/client/components/router-reducer/get-prefetch-cache-entry-status.js b/dist/esm/client/components/router-reducer/get-prefetch-cache-entry-status.js
-index beabbf7f0b10de96921d5bbfe8f2ab6321075c31..b8e62d3d5e38ed8d78f62b53d903512fe7aa18e0 100644
+index beabbf7f0b10de96921d5bbfe8f2ab6321075c31..f6cc4fefb68fc74feacca9655a453a212c744192 100644
 --- a/dist/esm/client/components/router-reducer/get-prefetch-cache-entry-status.js
 +++ b/dist/esm/client/components/router-reducer/get-prefetch-cache-entry-status.js
 @@ -1,5 +1,5 @@
  const FIVE_MINUTES = 5 * 60 * 1000;
 -const THIRTY_SECONDS = 30 * 1000;
-+const THIRTY_SECONDS = 1 * 1000;
++const THIRTY_SECONDS = 0;
  export var PrefetchCacheEntryStatus;
  (function(PrefetchCacheEntryStatus) {
      PrefetchCacheEntryStatus["fresh"] = "fresh";
