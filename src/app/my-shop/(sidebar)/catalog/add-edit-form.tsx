@@ -20,6 +20,13 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
@@ -104,43 +111,54 @@ function SelectedProducts({ products }: { products: Product[] }) {
   }, [products]);
 
   return (
-    <div className="space-y-3">
-      {!!productIDs.length &&
-        productIDs.map((id) => {
-          const product = map[id]!;
+    <Card>
+      <CardHeader>
+        <CardTitle>Selected Products</CardTitle>
+        <CardDescription>
+          These products will be included in the catalog
+        </CardDescription>
+      </CardHeader>
 
-          return (
-            <div key={id} className="flex max-w-md items-center gap-2">
-              <Image
-                src={imageUrl(product.image)}
-                width={60}
-                height={60}
-                alt={`Image of ${product.name}`}
-                className="aspect-square rounded-md object-cover"
-              />
+      <CardContent className="space-y-4">
+        {!!productIDs.length &&
+          productIDs.map((id) => {
+            const product = map[id]!;
 
-              <div className="flex-1">
-                <p>{product.name}</p>
-                <p>{product.price}</p>
+            return (
+              <div key={id} className="flex max-w-md items-center gap-3">
+                <Image
+                  src={imageUrl(product.image)}
+                  width={60}
+                  height={60}
+                  alt={`Image of ${product.name}`}
+                  className="aspect-square rounded-md object-cover"
+                />
+
+                <div className="flex-1">
+                  <p>{product.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    ${product.price}
+                  </p>
+                </div>
+
+                <Button
+                  size={"icon"}
+                  variant={"ghost"}
+                  type="button"
+                  onClick={() =>
+                    setValue(
+                      "productIds",
+                      productIDs.filter((productId) => productId !== id),
+                    )
+                  }
+                >
+                  <X />
+                </Button>
               </div>
-
-              <Button
-                size={"icon"}
-                variant={"ghost"}
-                type="button"
-                onClick={() =>
-                  setValue(
-                    "productIds",
-                    productIDs.filter((productId) => productId !== id),
-                  )
-                }
-              >
-                <X />
-              </Button>
-            </div>
-          );
-        })}
-    </div>
+            );
+          })}
+      </CardContent>
+    </Card>
   );
 }
 
