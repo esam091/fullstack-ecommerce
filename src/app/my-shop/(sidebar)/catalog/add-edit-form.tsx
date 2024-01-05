@@ -17,7 +17,7 @@ import { type CatalogFormSchema, catalogForm } from "@/lib/schemas/catalog";
 import { Form } from "@/components/ui/form";
 import FormTextField from "@/components/ui/form-textfield";
 import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, LoadingButton, LoadingSpinner } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -46,7 +46,8 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
 
   const { control, setValue, handleSubmit } = form;
 
-  const { mutate: submit } = api.catalog.createOrUpdate.useMutation();
+  const { mutate: submit, isLoading } =
+    api.catalog.createOrUpdate.useMutation();
 
   return (
     <Form {...form}>
@@ -77,10 +78,16 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
           );
         })}
       >
-        <FormTextField control={control} name="name" label="Catalog Name" />
+        <FormTextField
+          control={control}
+          name="name"
+          label="Catalog Name"
+          disabled={isLoading}
+        />
 
         <ProductAutocomplete
           products={products}
+          disabled={isLoading}
           onSelectedProductsChange={(selectedProducts) =>
             setValue(
               "productIds",
@@ -89,18 +96,28 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
           }
         />
 
-        <SelectedProducts products={products} />
+        <SelectedProducts products={products} disabled={isLoading} />
 
         <div className="flex justify-end gap-4">
-          <Button variant="ghost">Delete</Button>
-          <Button type="submit">Submit</Button>
+          <Button variant="ghost" disabled={isLoading}>
+            Delete
+          </Button>
+          <LoadingButton type="submit" loading={isLoading}>
+            {catalog?.id ? "Save catalog" : "Create catalog"}
+          </LoadingButton>
         </div>
       </form>
     </Form>
   );
 }
 
-function SelectedProducts({ products }: { products: Product[] }) {
+function SelectedProducts({
+  products,
+  disabled,
+}: {
+  products: Product[];
+  disabled: boolean;
+}) {
   const { watch, setValue } = useFormContext<CatalogFormSchema>();
 
   const productIDs = watch("productIds");
@@ -146,6 +163,7 @@ function SelectedProducts({ products }: { products: Product[] }) {
                 </div>
 
                 <Button
+                  disabled={disabled}
                   size={"icon"}
                   variant={"ghost"}
                   type="button"
@@ -171,11 +189,13 @@ type Product = typeof products.$inferSelect;
 type ProductAutocompleteProps = {
   products: Product[];
   onSelectedProductsChange?(products: Product[]): void;
+  disabled?: boolean;
 };
 
 function ProductAutocomplete({
   products,
   onSelectedProductsChange,
+  disabled,
 }: ProductAutocompleteProps) {
   const { watch, setValue } = useFormContext<CatalogFormSchema>();
 
@@ -259,6 +279,7 @@ function ProductAutocomplete({
             preventKeyAction: true,
           }),
         )}
+        disabled={disabled}
       />
 
       <Popover open={isOpen}>
