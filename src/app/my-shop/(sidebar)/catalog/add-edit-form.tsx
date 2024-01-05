@@ -91,7 +91,10 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
 
         <SelectedProducts products={products} />
 
-        <Button type="submit">Submit</Button>
+        <div className="flex justify-end gap-4">
+          <Button variant="ghost">Delete</Button>
+          <Button type="submit">Submit</Button>
+        </div>
       </form>
     </Form>
   );
