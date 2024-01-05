@@ -116,7 +116,7 @@ function SelectedProducts({ products }: { products: Product[] }) {
                 width={60}
                 height={60}
                 alt={`Image of ${product.name}`}
-                className="rounded-md"
+                className="aspect-square rounded-md object-cover"
               />
 
               <div className="flex-1">
@@ -258,7 +258,7 @@ function ProductAutocomplete({
               >
                 <Image
                   alt={`Image of ${product.name}`}
-                  className="mr-3 rounded-md"
+                  className="mr-3 aspect-square rounded-md object-cover"
                   width={60}
                   height={60}
                   src={imageUrl(product.image)}
