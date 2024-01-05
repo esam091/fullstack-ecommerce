@@ -51,6 +51,7 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
   return (
     <Form {...form}>
       <form
+        className="space-y-8"
         onSubmit={handleSubmit((data) => {
           submit(
             {
@@ -115,7 +116,7 @@ function SelectedProducts({ products }: { products: Product[] }) {
       <CardHeader>
         <CardTitle>Selected Products</CardTitle>
         <CardDescription>
-          These products will be included in the catalog
+          {productIDs.length} products will be included in the catalog
         </CardDescription>
       </CardHeader>
 
