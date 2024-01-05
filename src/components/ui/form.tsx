@@ -9,6 +9,7 @@ import {
   type FieldValues,
   FormProvider,
   useFormContext,
+  type FieldError,
 } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
@@ -160,6 +161,16 @@ const FormMessage = React.forwardRef<
   );
 });
 FormMessage.displayName = "FormMessage";
+
+export function FormError({ error }: { error?: FieldError }) {
+  return (
+    <>
+      {error && (
+        <p className="text-sm font-medium text-destructive">{error.message}</p>
+      )}
+    </>
+  );
+}
 
 export {
   useFormField,

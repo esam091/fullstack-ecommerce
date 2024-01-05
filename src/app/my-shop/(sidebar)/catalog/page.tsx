@@ -1,10 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import imageUrl from "@/lib/imageUrl";
 import { api } from "@/trpc/server";
 import Image from "next/image";
@@ -14,7 +9,13 @@ export default async function Page() {
   const myCatalogs = await api.catalog.myCatalogs.query();
   return (
     <div className="space-y-8">
-      <h3 className="text-xl font-semibold">My Catalogs</h3>
+      <div className="flex justify-between">
+        <h3 className="text-xl font-semibold">My Catalogs</h3>
+
+        <Button asChild variant={"outline"}>
+          <Link href="/my-shop/catalog/add">New catalog</Link>
+        </Button>
+      </div>
       <div className="flex flex-col gap-6">
         {myCatalogs.map((item) => (
           <Link href={`/my-shop/catalog/edit/${item.catalog.id}`}>

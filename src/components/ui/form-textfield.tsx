@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormDescription,
+  FormError,
   FormItem,
   FormLabel,
   FormMessage,
@@ -9,6 +10,7 @@ import {
   type FieldValues,
   type FieldPath,
   type Control,
+  useFormContext,
 } from "react-hook-form";
 import { Input, type InputProps } from "./input";
 
@@ -32,12 +34,16 @@ export default function FormTextField<
   description,
   ...rest
 }: FormTextFieldProps<TFieldValues, TName>) {
+  const { getFieldState, formState } = useFormContext();
+
+  const { error } = getFieldState(name, formState);
+
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>
       <Input {...rest} {...control.register(name)} />
       <FormDescription>{description}</FormDescription>
-      <FormMessage />
+      <FormError error={error} />
     </FormItem>
   );
 }

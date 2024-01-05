@@ -14,7 +14,7 @@ import React, { useMemo, useState } from "react";
 import { useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type CatalogFormSchema, catalogForm } from "@/lib/schemas/catalog";
-import { Form } from "@/components/ui/form";
+import { Form, FormError } from "@/components/ui/form";
 import FormTextField from "@/components/ui/form-textfield";
 import { X } from "lucide-react";
 import { Button, LoadingButton, buttonVariants } from "@/components/ui/button";
@@ -268,7 +268,9 @@ function ProductAutocomplete({
   onSelectedProductsChange,
   disabled,
 }: ProductAutocompleteProps) {
-  const { watch, setValue } = useFormContext<CatalogFormSchema>();
+  const { watch, setValue, getFieldState } =
+    useFormContext<CatalogFormSchema>();
+  const { error } = getFieldState("productIds");
 
   const selectedIds = watch("productIds");
   const set = new Set(selectedIds);
@@ -287,7 +289,7 @@ function ProductAutocomplete({
 
   const filteredProducts = products.filter(
     (product) =>
-      !!inputValue &&
+      !inputValue ||
       product.name.toLowerCase().includes(inputValue.toLowerCase()),
   );
 
@@ -352,6 +354,7 @@ function ProductAutocomplete({
         )}
         disabled={disabled}
       />
+      <FormError error={error} />
 
       <Popover open={isOpen}>
         <PopoverAnchor />
