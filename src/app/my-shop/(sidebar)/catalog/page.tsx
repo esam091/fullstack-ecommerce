@@ -8,6 +8,7 @@ import {
 import imageUrl from "@/lib/imageUrl";
 import { api } from "@/trpc/server";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Page() {
   const myCatalogs = await api.catalog.myCatalogs.query();
@@ -18,7 +19,11 @@ export default async function Page() {
         {myCatalogs.map((item) => (
           <Card key={item.catalog.id}>
             <CardHeader>
-              <CardTitle>{item.catalog.name}</CardTitle>
+              <CardTitle>
+                <Link href={`/my-shop/catalog/edit/${item.catalog.id}`}>
+                  {item.catalog.name}
+                </Link>
+              </CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4 ">
               {item.products.map((product) => (
