@@ -17,7 +17,7 @@ import { type CatalogFormSchema, catalogForm } from "@/lib/schemas/catalog";
 import { Form } from "@/components/ui/form";
 import FormTextField from "@/components/ui/form-textfield";
 import { X } from "lucide-react";
-import { Button, LoadingButton } from "@/components/ui/button";
+import { Button, LoadingButton, buttonVariants } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -27,6 +27,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
@@ -46,8 +58,15 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
 
   const { control, setValue, handleSubmit } = form;
 
-  const { mutate: submit, isLoading } =
+  const { mutate: submit, isLoading: isSubmitting } =
     api.catalog.createOrUpdate.useMutation();
+
+  const { mutate: deleteCatalog, isLoading: isDeleting } =
+    api.catalog.delete.useMutation();
+
+  const router = useRouter();
+
+  const isLoading = isSubmitting || isDeleting;
 
   return (
     <Form {...form}>
@@ -99,10 +118,62 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
         <SelectedProducts products={products} disabled={isLoading} />
 
         <div className="flex justify-end gap-4">
-          <Button variant="ghost" disabled={isLoading}>
-            Delete
-          </Button>
-          <LoadingButton type="submit" loading={isLoading}>
+          {!!catalog?.id && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <LoadingButton
+                  variant="ghost"
+                  disabled={isSubmitting}
+                  loading={isDeleting}
+                  type="button"
+                >
+                  Delete
+                </LoadingButton>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete this catalog?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    className={buttonVariants({ variant: "destructive" })}
+                    onClick={() => {
+                      deleteCatalog(catalog.id, {
+                        onSuccess() {
+                          toast.toast({
+                            description: "Catalog deleted",
+                          });
+
+                          router.replace("/my-shop/catalog");
+                        },
+                        onError() {
+                          toast.toast({
+                            title: "Error",
+                            description: "Please try again later",
+                            variant: "destructive",
+                          });
+                        },
+                      });
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+
+          <LoadingButton
+            type="submit"
+            loading={isSubmitting}
+            disabled={isDeleting}
+          >
             {catalog?.id ? "Save catalog" : "Create catalog"}
           </LoadingButton>
         </div>

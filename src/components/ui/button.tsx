@@ -65,7 +65,7 @@ export interface LoadingButtonProps extends ButtonProps {
 const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
   ({ loading = false, children, ...props }, ref) => {
     return (
-      <Button ref={ref} {...props} disabled={loading}>
+      <Button ref={ref} {...props} disabled={loading ?? props.disabled}>
         {loading && <LoadingSpinner />}
         {children}
       </Button>

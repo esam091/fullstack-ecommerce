@@ -10,38 +10,6 @@ import { and, eq, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { catalogForm } from "@/lib/schemas/catalog";
 
-const ownedProductAndCollection = authenticatedProcedure
-  .input(
-    z.object({
-      collectionId: z.number(),
-      productId: z.number(),
-    }),
-  )
-  .use(async (opts) => {
-    const result = await db
-      .select({
-        shopId: shops.id,
-      })
-      .from(products)
-      .innerJoin(shops, eq(shops.id, products.shopId))
-      .innerJoin(catalog, eq(catalog.shopId, shops.id))
-      .where(
-        and(
-          eq(shops.userId, opts.ctx.auth.userId),
-          eq(products.id, opts.input.productId),
-          eq(catalog.id, opts.input.collectionId),
-        ),
-      );
-
-    if (result.length !== 1) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-      });
-    }
-
-    return opts.next();
-  });
-
 async function ensureUserOwnsCollection({
   collectionId,
   userId,
@@ -50,7 +18,7 @@ async function ensureUserOwnsCollection({
   userId: string;
 }) {
   const result = await db
-    .select({ id: shops.id })
+    .select({ id: shops })
     .from(shops)
     .innerJoin(catalog, eq(shops.id, catalog.shopId))
     .where(
@@ -138,7 +106,12 @@ export const catalogRouter = createTRPCRouter({
         collectionId: input,
       });
 
-      await db.delete(catalog).where(eq(catalog.id, input));
+      await db.transaction(async (tx) => {
+        await tx
+          .delete(catalogProducts)
+          .where(eq(catalogProducts.catalogId, input));
+        await tx.delete(catalog).where(eq(catalog.id, input));
+      });
     }),
 
   myCatalogs: shopOwnerProcedure.query(async ({ ctx }) => {
@@ -178,20 +151,5 @@ export const catalogRouter = createTRPCRouter({
     }, [] as ReturnType[]);
 
     return grouped;
-  }),
-
-  addProduct: ownedProductAndCollection.mutation(async ({ input }) => {
-    await db.insert(catalogProducts).values([]);
-  }),
-
-  removeProduct: ownedProductAndCollection.mutation(async ({ input }) => {
-    await db
-      .delete(catalogProducts)
-      .where(
-        and(
-          eq(catalogProducts.productId, input.productId),
-          eq(catalogProducts.catalogId, input.collectionId),
-        ),
-      );
   }),
 });
