@@ -17,7 +17,7 @@ import { type CatalogFormSchema, catalogForm } from "@/lib/schemas/catalog";
 import { Form } from "@/components/ui/form";
 import FormTextField from "@/components/ui/form-textfield";
 import { X } from "lucide-react";
-import { Button, LoadingButton, LoadingSpinner } from "@/components/ui/button";
+import { Button, LoadingButton } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
 import {

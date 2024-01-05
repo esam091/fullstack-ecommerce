@@ -141,6 +141,45 @@ export const catalogRouter = createTRPCRouter({
       await db.delete(catalog).where(eq(catalog.id, input));
     }),
 
+  myCatalogs: shopOwnerProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db
+      .select({
+        catalog: {
+          id: catalog.id,
+          name: catalog.name,
+        },
+        product: {
+          id: products.id,
+          name: products.name,
+          image: products.image,
+        },
+      })
+      .from(catalog)
+      .innerJoin(catalogProducts, eq(catalogProducts.catalogId, catalog.id))
+      .innerJoin(products, eq(catalogProducts.productId, products.id))
+      .where(eq(catalog.shopId, ctx.shopId));
+
+    type ReturnType = {
+      catalog: (typeof result)[0]["catalog"];
+      products: (typeof result)[0]["product"][];
+    };
+
+    const grouped = result.reduce((acc, item) => {
+      const existingCatalog = acc.find((c) => c.catalog.id === item.catalog.id);
+      if (existingCatalog) {
+        existingCatalog.products.push(item.product);
+      } else {
+        acc.push({
+          catalog: item.catalog,
+          products: [item.product],
+        });
+      }
+      return acc;
+    }, [] as ReturnType[]);
+
+    return grouped;
+  }),
+
   addProduct: ownedProductAndCollection.mutation(async ({ input }) => {
     await db.insert(catalogProducts).values([]);
   }),
