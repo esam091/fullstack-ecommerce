@@ -2,11 +2,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import imageUrl from "@/lib/imageUrl";
 import { api } from "@/trpc/server";
+import { Book } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Page() {
   const myCatalogs = await api.catalog.myCatalogs.query();
+
+  if (myCatalogs.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-5">
+        <Book className="h-20 w-20 text-muted-foreground" />
+
+        <h2 className="text-lg font-semibold">Catalog</h2>
+
+        <Button asChild>
+          <Link href="/my-shop/catalog/add">Create your first catalog</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between">
