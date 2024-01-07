@@ -1,6 +1,6 @@
 "use client";
 import { LoadingButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -10,6 +10,8 @@ import { api } from "@/trpc/react";
 import { useToast } from "@/components/ui/use-toast";
 import FormImageUpload from "@/components/ui/form-image-upload";
 import { useRouter } from "next/navigation";
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "@/server/api/root";
 
 const fromSchema = z.object({
   name: z
@@ -22,12 +24,17 @@ const fromSchema = z.object({
   image: z.string({ required_error: "Shop image is required" }),
 });
 
-export default function ShopAddEditForm() {
+type Props = {
+  shop: inferRouterOutputs<AppRouter>["shop"]["myShop"];
+};
+
+export default function ShopAddEditForm({ shop }: Props) {
   const form = useForm<z.infer<typeof fromSchema>>({
     resolver: zodResolver(fromSchema),
     defaultValues: {
-      location: "",
-      name: "",
+      name: shop?.name,
+      location: shop?.location,
+      image: shop?.image,
     },
   });
 
