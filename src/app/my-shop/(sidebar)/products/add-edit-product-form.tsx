@@ -9,6 +9,7 @@ import FormImageUpload from "src/components/ui/form-image-upload";
 import { Form } from "@/components/ui/form";
 import { type products } from "@/server/db/schema";
 import FormTextarea from "@/components/ui/form-textarea";
+import { Button, LoadingButton } from "@/components/ui/button";
 
 type Product = typeof products.$inferSelect;
 
@@ -53,20 +54,34 @@ export default function AddEditProductForm({ product }: Props) {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormTextField control={control} name="name" label="Product Name" />
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <FormTextField
+          control={control}
+          name="name"
+          label="Product Name"
+          disabled={createOrUpdateProduct.isLoading}
+        />
 
         <FormTextarea
           control={control}
           name="description"
           label="Product Description"
+          disabled={createOrUpdateProduct.isLoading}
         />
 
         <FormImageUpload control={control} name="image" label="Product Image" />
 
-        <FormTextField control={control} name="price" label="Product Price" />
+        <FormTextField
+          placeholder="5.20"
+          control={control}
+          name="price"
+          label="Product Price"
+          disabled={createOrUpdateProduct.isLoading}
+        />
 
-        <input type="submit" />
+        <LoadingButton type="submit" loading={createOrUpdateProduct.isLoading}>
+          {product ? "Save product" : "Create product"}
+        </LoadingButton>
       </form>
     </Form>
   );
