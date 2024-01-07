@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormDescription,
+  FormError,
   FormItem,
   FormLabel,
   FormMessage,
@@ -9,6 +10,7 @@ import {
   type FieldValues,
   type FieldPath,
   type Control,
+  useFormContext,
 } from "react-hook-form";
 import { Textarea, type TextareaProps } from "./textarea";
 
@@ -32,12 +34,15 @@ export default function FormTextarea<
   description,
   ...rest
 }: FormTextareaProps<TFieldValues, TName>) {
+  const { getFieldState } = useFormContext();
+
+  const { error } = getFieldState(name);
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>
       <Textarea {...rest} {...control.register(name)} />
       <FormDescription>{description}</FormDescription>
-      <FormMessage />
+      <FormError error={error} />
     </FormItem>
   );
 }

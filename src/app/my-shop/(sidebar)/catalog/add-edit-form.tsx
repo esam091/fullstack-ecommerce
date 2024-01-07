@@ -85,6 +85,10 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
                     ? "Changes saved"
                     : "New catalog created",
                 });
+
+                if (!catalog) {
+                  router.push("/my-shop/catalog");
+                }
               },
               onError() {
                 toast.toast({
