@@ -5,6 +5,15 @@ import { eq } from "drizzle-orm";
 import z from "zod";
 
 export const shopRouter = createTRPCRouter({
+  myShop: authenticatedProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db
+      .select()
+      .from(shops)
+      .where(eq(shops.userId, ctx.auth.userId));
+
+    return result[0];
+  }),
+
   createShop: authenticatedProcedure
     .input(
       z.object({
