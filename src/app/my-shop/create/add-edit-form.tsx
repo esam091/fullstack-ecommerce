@@ -58,7 +58,7 @@ export default function ShopAddEditForm() {
   };
 
   return (
-    <Card className="mx-auto w-full max-w-2xl shadow-md">
+    <div className="max-w-2xl">
       <CardHeader>
         <CardTitle>Create Your Shop</CardTitle>
       </CardHeader>
@@ -94,6 +94,6 @@ export default function ShopAddEditForm() {
           </form>
         </Form>
       </CardContent>
-    </Card>
+    </div>
   );
 }
