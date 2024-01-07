@@ -8,7 +8,7 @@ import {
 import { db } from "@/server/db";
 import { products, shops } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 
 const productIdInput = z.object({
@@ -84,11 +84,24 @@ export const productRouter = createTRPCRouter({
       .where(eq(products.shopId, ctx.shopId));
   }),
 
-  getDetail: publicProcedure.input(productIdInput).query(async ({ input }) => {
-    return db
-      .select()
-      .from(products)
-      .where(eq(products.id, input.productId))
-      .then((products) => products[0]);
-  }),
+  getDetail: publicProcedure
+    .input(productIdInput)
+    .input(z.object({ onlyMine: z.boolean().optional() }))
+    .query(async ({ input, ctx }) => {
+      const result = await ctx.db
+        .select({
+          product: getTableColumns(products),
+          userId: shops.userId,
+        })
+        .from(products)
+        .innerJoin(shops, eq(shops.id, products.shopId))
+        .where(eq(products.id, input.productId))
+        .then((products) => products[0]);
+
+      if (input.onlyMine && result?.userId !== ctx.auth.userId) {
+        return undefined;
+      }
+
+      return result?.product;
+    }),
 });

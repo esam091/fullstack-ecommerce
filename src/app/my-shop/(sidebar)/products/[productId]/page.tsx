@@ -9,6 +9,7 @@ export default async function Page({
 }) {
   const product = await api.product.getDetail.query({
     productId: Number(productId),
+    onlyMine: true,
   });
 
   if (!product) {
