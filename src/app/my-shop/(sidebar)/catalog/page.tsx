@@ -11,15 +11,17 @@ export default async function Page() {
 
   if (myCatalogs.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-5">
-        <Book className="h-20 w-20 text-muted-foreground" />
+      <Card className="p-8">
+        <CardContent className="flex flex-col items-center gap-4">
+          <Book className="h-16 w-16 text-muted-foreground" />
 
-        <h2 className="text-lg font-semibold">Catalog</h2>
+          <h2 className="text-lg font-semibold">Catalog</h2>
 
-        <Button asChild>
-          <Link href="/my-shop/catalog/add">Create your first catalog</Link>
-        </Button>
-      </div>
+          <Button asChild>
+            <Link href="/my-shop/catalog/add">Create your first catalog</Link>
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
