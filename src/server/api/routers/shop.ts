@@ -14,7 +14,7 @@ export const shopRouter = createTRPCRouter({
     return result[0];
   }),
 
-  createShop: authenticatedProcedure
+  createOrUpdate: authenticatedProcedure
     .input(
       z.object({
         name: z.string(),
@@ -23,25 +23,20 @@ export const shopRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const existingShop = await ctx.db
-        .select({
-          userId: shops.userId,
+      await ctx.db
+        .insert(shops)
+        .values({
+          userId: ctx.auth.userId,
+          name: input.name,
+          image: input.image,
+          location: input.location,
         })
-        .from(shops)
-        .where(eq(shops.userId, ctx.auth.userId));
-
-      if (existingShop.length) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "User already has a shop",
+        .onDuplicateKeyUpdate({
+          set: {
+            name: input.name,
+            location: input.location,
+            image: input.image,
+          },
         });
-      }
-
-      await ctx.db.insert(shops).values({
-        userId: ctx.auth.userId,
-        name: input.name,
-        image: input.image,
-        location: input.location,
-      });
     }),
 });

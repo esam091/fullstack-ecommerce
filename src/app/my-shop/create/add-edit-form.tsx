@@ -41,17 +41,21 @@ export default function ShopAddEditForm({ shop }: Props) {
   const { handleSubmit, control } = form;
   const toast = useToast();
 
-  const createShop = api.shop.createShop.useMutation();
+  const createOrUpdateShop = api.shop.createOrUpdate.useMutation();
 
   const router = useRouter();
 
   const onSubmit = async (data: z.infer<typeof fromSchema>) => {
-    createShop.mutate(
+    createOrUpdateShop.mutate(
       { ...data },
       {
         onSuccess: () => {
-          toast.toast({ title: "Shop created successfully" });
-          router.replace("/my-shop");
+          if (shop) {
+            toast.toast({ title: "Shop profile updated" });
+          } else {
+            toast.toast({ title: "Shop created successfully" });
+            router.replace("/my-shop");
+          }
         },
         onError: (error) => {
           toast.toast({
@@ -67,7 +71,7 @@ export default function ShopAddEditForm({ shop }: Props) {
   return (
     <div className="max-w-2xl">
       <CardHeader>
-        <CardTitle>Create Your Shop</CardTitle>
+        <CardTitle>{shop ? "Edit Shop Profile" : "Create Your Shop"}</CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -78,6 +82,7 @@ export default function ShopAddEditForm({ shop }: Props) {
               name="name"
               label="Shop Name"
               placeholder="My awesome shop"
+              disabled={createOrUpdateShop.isLoading}
             />
 
             <FormTextField
@@ -86,6 +91,7 @@ export default function ShopAddEditForm({ shop }: Props) {
               placeholder="New York"
               name="location"
               description="This will be used to calculate shipping costs to customers"
+              disabled={createOrUpdateShop.isLoading}
             />
 
             <FormImageUpload
@@ -96,7 +102,12 @@ export default function ShopAddEditForm({ shop }: Props) {
             />
 
             <div className="flex items-center justify-between">
-              <LoadingButton type="submit">Create Shop</LoadingButton>
+              <LoadingButton
+                type="submit"
+                disabled={createOrUpdateShop.isLoading}
+              >
+                Create Shop
+              </LoadingButton>
             </div>
           </form>
         </Form>
