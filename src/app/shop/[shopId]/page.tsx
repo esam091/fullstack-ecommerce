@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import SidebarLink from "@/app/my-shop/(sidebar)/sidebar-link";
+import ProductList from "./product-list";
 
 export default async function Page({
   params: { shopId },
@@ -33,16 +34,22 @@ export default async function Page({
       </div>
       <Separator className="my-6" />
 
-      <aside className="-mx-4 w-1/5">
-        <nav className="flex flex-col">
-          <SidebarLink href={`/shop/${shopId}`}>All Products</SidebarLink>
-          {shop.catalogs.map((catalog) => (
-            <SidebarLink href={`/shop/${shopId}/catalog/${catalog.id}`}>
-              {catalog.name}
-            </SidebarLink>
-          ))}
-        </nav>
-      </aside>
+      <div className="flex space-x-12 space-y-0">
+        <aside className="-mx-4 w-1/5">
+          <nav className="flex flex-col">
+            <SidebarLink href={`/shop/${shopId}`}>All Products</SidebarLink>
+            {shop.catalogs.map((catalog) => (
+              <SidebarLink href={`/shop/${shopId}/catalog/${catalog.id}`}>
+                {catalog.name}
+              </SidebarLink>
+            ))}
+          </nav>
+        </aside>
+
+        <div className="flex-1 lg:max-w-2xl">
+          <ProductList shopId={shopId} />
+        </div>
+      </div>
     </div>
   );
 }
