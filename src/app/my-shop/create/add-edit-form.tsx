@@ -25,7 +25,7 @@ const fromSchema = z.object({
 });
 
 type Props = {
-  shop: inferRouterOutputs<AppRouter>["shop"]["myShop"];
+  shop?: inferRouterOutputs<AppRouter>["shop"]["myShop"];
 };
 
 export default function ShopAddEditForm({ shop }: Props) {
