@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Plus } from "lucide-react";
 
 export default async function Page() {
   const products = await api.product.myProducts.query();
@@ -29,6 +30,14 @@ export default async function Page() {
 
   return (
     <div>
+      <div className="flex items-baseline gap-5">
+        <h3 className="text-xl font-semibold">Products</h3>
+
+        <Button asChild size="sm" variant="secondary">
+          <Link href="/my-shop/products/add">Add new</Link>
+        </Button>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
