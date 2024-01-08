@@ -17,7 +17,7 @@ export default function SidebarLink({ href, children }: SidebarLinkProps) {
       href={href}
       className={clsx(
         "h-9 whitespace-nowrap rounded-md px-4 py-2 text-secondary-foreground",
-        pathname.includes(href) ? "bg-clover-300" : "hover:underline",
+        pathname === href ? "bg-clover-300" : "hover:underline",
       )}
     >
       {children}

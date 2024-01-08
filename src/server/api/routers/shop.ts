@@ -1,7 +1,11 @@
-import { authenticatedProcedure, createTRPCRouter } from "@/server/api/trpc";
+import {
+  authenticatedProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { shops } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import z from "zod";
 
 export const shopRouter = createTRPCRouter({
@@ -39,4 +43,18 @@ export const shopRouter = createTRPCRouter({
           },
         });
     }),
+
+  getById: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
+    return ctx.db.query.shops.findFirst({
+      where: eq(sql<string>`CAST(${shops.id} as char)`, input),
+      with: {
+        catalogs: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }),
 });

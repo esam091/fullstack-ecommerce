@@ -93,8 +93,16 @@ export const catalogProducts = mysqlTable(
   }),
 );
 
-export const catalogRelations = relations(catalog, ({ many }) => ({
+export const shopRelations = relations(shops, ({ many }) => ({
+  catalogs: many(catalog),
+}));
+
+export const catalogRelations = relations(catalog, ({ many, one }) => ({
   products: many(catalogProducts),
+  shop: one(shops, {
+    fields: [catalog.shopId],
+    references: [shops.id],
+  }),
 }));
 
 export const catalogProductRelations = relations(
