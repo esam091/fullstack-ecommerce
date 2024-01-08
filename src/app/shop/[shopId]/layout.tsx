@@ -51,7 +51,7 @@ export default async function Layout({
           </nav>
         </aside>
 
-        <div className="flex-1 lg:max-w-2xl">{children}</div>
+        <div className="flex-1 lg:max-w-4xl">{children}</div>
       </div>
     </div>
   );
