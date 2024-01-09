@@ -66,22 +66,9 @@ export default async function Page({
               </div>
             </div>
             <div className="prose prose-indigo dark:prose-invert mb-4">
-              <p>
-                Maecenas ultrices, justo vel imperdiet gravida, urna ligula
-                hendrerit nibh, ac cursus nibh sapien in purus. Mauris tincidunt
-                tincidunt turpis in porta. Integer fermentum tincidunt auctor.
-              </p>
-              <p>
-                Consectetur adipiscing elit. Maecenas ultrices, justo vel
-                imperdiet gravida, urna ligula hendrerit nibh, ac cursus nibh
-                sapien in purus. Mauris tincidunt tincidunt turpis in porta
-                integer.
-              </p>
-              <p>
-                Urna ligula hendrerit nibh, ac cursus nibh sapien in purus.
-                Mauris tincidunt tincidunt turpis in porta. Integer fermentum
-                tincidunt.
-              </p>
+              {product.description
+                .split("\n")
+                .map((line) => (line ? <p>{line}</p> : <br />))}
             </div>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
