@@ -5,10 +5,7 @@ import { and, eq, sql, getTableColumns } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-function stringifyColumn<T>(column: T) {
-  return sql<string>`CAST(${column} as char)`;
-}
+import { stringifyColumn } from "../../../lib/stringifyColumn";
 
 export default async function ProductList({
   shopId,
@@ -59,7 +56,10 @@ export default async function ProductList({
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {shopProducts.map((product) => (
         <div className="group relative overflow-hidden rounded-lg shadow-lg">
-          <Link className="absolute inset-0 z-10" href="#">
+          <Link
+            className="absolute inset-0 z-10"
+            href={`/product/${product.id}`}
+          >
             <span className="sr-only">View</span>
           </Link>
           <Image
