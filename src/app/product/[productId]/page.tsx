@@ -5,6 +5,7 @@ import { db } from "@/server/db";
 import { products, shops } from "@/server/db/schema";
 import { eq, getTableColumns } from "drizzle-orm";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function Page({
@@ -59,13 +60,13 @@ export default async function Page({
               <div>
                 <a
                   href="#"
-                  className="block font-semibold hover:text-gray-500 dark:hover:text-gray-300"
+                  className="block text-lg font-semibold hover:text-gray-500 dark:hover:text-gray-300"
                 >
                   {product.name}
                 </a>
               </div>
             </div>
-            <div className="prose prose-indigo dark:prose-invert mb-4">
+            <div className="prose prose-indigo dark:prose-invert mb-6">
               {product.description
                 .split("\n")
                 .map((line) => (line ? <p>{line}</p> : <br />))}
@@ -78,6 +79,25 @@ export default async function Page({
               </div>
               <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0">
                 <Button size={"lg"}>Add to cart</Button>
+              </div>
+
+              <div className="flex pt-4">
+                <Image
+                  src={imageUrl(shop.image)}
+                  width={60}
+                  height={60}
+                  alt="Shop image"
+                  className="mr-3"
+                />
+
+                <div>
+                  <Link href={`/shop/${shop.id}`}>
+                    <p className="font-medium">{shop.name}</p>
+                  </Link>
+                  <p className="text-sm text-muted-foreground">
+                    {shop.location}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
