@@ -81,24 +81,25 @@ export default async function Page({
                 <Button size={"lg"}>Add to cart</Button>
               </div>
 
-              <div className="flex pt-4">
-                <Image
-                  src={imageUrl(shop.image)}
-                  width={60}
-                  height={60}
-                  alt="Shop image"
-                  className="mr-3"
-                />
+              <Link href={`/shop/${shop.id}`} className="block">
+                <div className="flex">
+                  <Image
+                    src={imageUrl(shop.image)}
+                    width={60}
+                    height={60}
+                    alt="Shop image"
+                    className="mr-3"
+                  />
 
-                <div>
-                  <Link href={`/shop/${shop.id}`}>
+                  <div>
                     <p className="font-medium">{shop.name}</p>
-                  </Link>
-                  <p className="text-sm text-muted-foreground">
-                    {shop.location}
-                  </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {shop.location}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
           {/* END Product Info */}
