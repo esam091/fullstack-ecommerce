@@ -1,41 +1,52 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CardContent, Card } from "@/components/ui/card";
+import { db } from "@/server/db";
+import { products } from "@/server/db/schema";
+import { sql } from "drizzle-orm";
+import imageUrl from "@/lib/imageUrl";
+import Image from "next/image";
 
-export default function Component() {
+export default async function Component() {
+  const [popularProduct] = await db
+    .select()
+    .from(products)
+    .orderBy(sql`RAND()`)
+    .limit(1);
+
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
-        <section className="bg-gray-100 px-6 py-12 dark:bg-gray-900">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="mb-4 text-3xl font-bold md:text-4xl">
-              Featured Product
-            </h1>
-            <p className="mb-8 text-gray-600 dark:text-gray-400">
-              Check out our latest and greatest product that you're sure to
-              love.
-            </p>
-            <div className="flex items-center justify-center">
-              <img
-                alt="Featured product"
-                className="h-64 w-64 rounded-lg object-cover shadow-lg"
-                height="400"
-                src="/placeholder.svg"
-                style={{
-                  aspectRatio: "400/400",
-                  objectFit: "cover",
-                }}
-                width="400"
-              />
+        {!!popularProduct && (
+          <section className="bg-gray-100 px-6 py-12 dark:bg-gray-900">
+            <div className="mx-auto max-w-3xl text-center">
+              <h1 className="mb-4 text-3xl font-bold md:text-4xl">
+                Featured Product
+              </h1>
+              <p className="mb-8 text-gray-600 dark:text-gray-400">
+                Check out our latest and greatest product that you're sure to
+                love.
+              </p>
+              <div className="flex items-center justify-center">
+                <Image
+                  alt="Featured product"
+                  className="aspect-square h-64 w-64 rounded-lg object-cover shadow-lg"
+                  height={400}
+                  src={imageUrl(popularProduct.image)}
+                  width={400}
+                />
+              </div>
+              <h2 className="mt-8 text-2xl font-bold">{popularProduct.name}</h2>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                {popularProduct.description}
+              </p>
+
+              <Button className="mt-8" asChild>
+                <Link href={`/product/${popularProduct.id}`}>Shop Now</Link>
+              </Button>
             </div>
-            <h2 className="mt-8 text-2xl font-bold">The Ultimate Gizmo</h2>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              This gizmo is the best thing since sliced bread. It's sure to
-              revolutionize your life.
-            </p>
-            <Button className="mt-8">Shop Now</Button>
-          </div>
-        </section>
+          </section>
+        )}
         <section className="px-6 py-12">
           <h2 className="mb-8 text-center text-2xl font-bold">
             Shop by Category
