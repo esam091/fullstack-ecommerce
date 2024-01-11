@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { SignIn, SignOutButton, auth, UserButton } from "@clerk/nextjs";
 import { ShoppingBag } from "lucide-react";
+import SignOut from "./sign-out";
 
 export default async function NavBar() {
   const userId = auth().userId;
@@ -40,9 +41,7 @@ export default async function NavBar() {
         {userId && (
           <>
             <UserButton />
-            <Button asChild variant={"ghost"}>
-              <SignOutButton />
-            </Button>
+            <SignOut />
           </>
         )}
       </nav>

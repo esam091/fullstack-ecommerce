@@ -47,7 +47,7 @@ export default async function Component() {
             </div>
           </section>
         )}
-        <section className="px-6 py-12">
+        {/* <section className="px-6 py-12">
           <h2 className="mb-8 text-center text-2xl font-bold">
             Shop by Category
           </h2>
@@ -77,8 +77,8 @@ export default async function Component() {
               </CardContent>
             </Card>
           </div>
-        </section>
-        <section className="bg-gray-100 px-6 py-12 dark:bg-gray-900">
+        </section> */}
+        <section className="px-6 py-12">
           <h2 className="mb-8 text-center text-2xl font-bold">
             Popular Products
           </h2>
