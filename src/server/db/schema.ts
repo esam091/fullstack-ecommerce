@@ -10,6 +10,9 @@ import {
   varchar,
   double,
   primaryKey,
+  mysqlEnum,
+  int,
+  char,
 } from "drizzle-orm/mysql-core";
 
 /**
@@ -83,6 +86,8 @@ export const catalogProducts = mysqlTable(
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    condition: mysqlEnum("condition", ["new", "used"]).notNull().default("new"),
+    stock: int("stock"),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
   (catalogProduct) => ({
@@ -92,6 +97,11 @@ export const catalogProducts = mysqlTable(
     ),
   }),
 );
+
+export const category = mysqlTable("category", {
+  id: char("id", { length: 21 }),
+  name: varchar("name", { length: 50 }),
+});
 
 export const shopRelations = relations(shops, ({ many }) => ({
   catalogs: many(catalog),
