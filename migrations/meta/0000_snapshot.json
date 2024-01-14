@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "e1a31c48-138e-4e10-aa5e-d5237c4936cf",
+  "id": "816acc8d-9ccc-4204-9722-1ebcac8e84a5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "ep_catalog": {
@@ -71,8 +71,8 @@
       },
       "uniqueConstraints": {}
     },
-    "ep_collection_product": {
-      "name": "ep_collection_product",
+    "ep_catalogProduct": {
+      "name": "ep_catalogProduct",
       "columns": {
         "catalogId": {
           "name": "catalogId",
@@ -107,9 +107,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "ep_collection_product_catalogId_ep_catalog_id_fk": {
-          "name": "ep_collection_product_catalogId_ep_catalog_id_fk",
-          "tableFrom": "ep_collection_product",
+        "ep_catalogProduct_catalogId_ep_catalog_id_fk": {
+          "name": "ep_catalogProduct_catalogId_ep_catalog_id_fk",
+          "tableFrom": "ep_catalogProduct",
           "tableTo": "ep_catalog",
           "columnsFrom": [
             "catalogId"
@@ -120,9 +120,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "ep_collection_product_productId_ep_product_id_fk": {
-          "name": "ep_collection_product_productId_ep_product_id_fk",
-          "tableFrom": "ep_collection_product",
+        "ep_catalogProduct_productId_ep_product_id_fk": {
+          "name": "ep_catalogProduct_productId_ep_product_id_fk",
+          "tableFrom": "ep_catalogProduct",
           "tableTo": "ep_product",
           "columnsFrom": [
             "productId"
@@ -135,11 +135,41 @@
         }
       },
       "compositePrimaryKeys": {
-        "ep_collection_product_catalogId_productId": {
-          "name": "ep_collection_product_catalogId_productId",
+        "ep_catalogProduct_catalogId_productId": {
+          "name": "ep_catalogProduct_catalogId_productId",
           "columns": [
             "catalogId",
             "productId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "ep_category": {
+      "name": "ep_category",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "char(21)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "ep_category_id": {
+          "name": "ep_category_id",
+          "columns": [
+            "id"
           ]
         }
       },
@@ -190,6 +220,28 @@
           "notNull": true,
           "autoincrement": false
         },
+        "condition": {
+          "name": "condition",
+          "type": "enum('new','used')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'new'"
+        },
+        "stock": {
+          "name": "stock",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "categoryId": {
+          "name": "categoryId",
+          "type": "char(21)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -223,6 +275,19 @@
           "tableTo": "ep_shop",
           "columnsFrom": [
             "shopId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ep_product_categoryId_ep_category_id_fk": {
+          "name": "ep_product_categoryId_ep_category_id_fk",
+          "tableFrom": "ep_product",
+          "tableTo": "ep_category",
+          "columnsFrom": [
+            "categoryId"
           ],
           "columnsTo": [
             "id"

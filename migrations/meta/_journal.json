@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1704376268147,
-      "tag": "0000_ancient_bloodscream",
+      "when": 1705239542942,
+      "tag": "0000_careless_richard_fisk",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1704382999738,
-      "tag": "0001_fast_red_wolf",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1705237223841,
-      "tag": "0002_hesitant_ezekiel_stane",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1705237872734,
-      "tag": "0003_lush_mongu",
+      "when": 1705239566285,
+      "tag": "0001_milky_la_nuit",
       "breakpoints": true
     }
   ]

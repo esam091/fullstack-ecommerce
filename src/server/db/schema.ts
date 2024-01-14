@@ -52,6 +52,11 @@ export const products = mysqlTable(
     description: varchar("description", { length: 500 }).notNull(),
     image: varchar("image", { length: 36 }).notNull(),
     price: double("price").notNull(),
+    condition: mysqlEnum("condition", ["new", "used"]).notNull().default("new"),
+    stock: int("stock"),
+    categoryId: char("categoryId", { length: 21 }).references(
+      () => categories.id,
+    ),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -86,8 +91,6 @@ export const catalogProducts = mysqlTable(
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    condition: mysqlEnum("condition", ["new", "used"]).notNull().default("new"),
-    stock: int("stock"),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
   (catalogProduct) => ({
@@ -98,8 +101,8 @@ export const catalogProducts = mysqlTable(
   }),
 );
 
-export const category = mysqlTable("category", {
-  id: char("id", { length: 21 }),
+export const categories = mysqlTable("category", {
+  id: char("id", { length: 21 }).primaryKey(),
   name: varchar("name", { length: 50 }),
 });
 

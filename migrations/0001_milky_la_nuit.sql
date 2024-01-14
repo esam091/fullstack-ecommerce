@@ -1,4 +1,4 @@
--- Custom SQL migration file, put you code below! --
+-- Custom SQL migration file, put you code below! --- Custom SQL migration file, put you code below! --
 INSERT INTO `ep_category`(id, name) VALUES
 ('uXBw8xaXCU_IusYdUlMOQ', 'Electronics and Gadgets'),
 ('xqxwlVdQ1K7poGyHz4axx', 'Home and Kitchen Appliances'),

@@ -7,12 +7,18 @@ CREATE TABLE `ep_catalog` (
 	CONSTRAINT `ep_catalog_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
-CREATE TABLE `ep_collection_product` (
+CREATE TABLE `ep_catalogProduct` (
 	`catalogId` bigint NOT NULL,
 	`productId` bigint NOT NULL,
 	`createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` timestamp ON UPDATE CURRENT_TIMESTAMP,
-	CONSTRAINT `ep_collection_product_catalogId_productId` PRIMARY KEY(`catalogId`,`productId`)
+	CONSTRAINT `ep_catalogProduct_catalogId_productId` PRIMARY KEY(`catalogId`,`productId`)
+);
+--> statement-breakpoint
+CREATE TABLE `ep_category` (
+	`id` char(21) NOT NULL,
+	`name` varchar(50),
+	CONSTRAINT `ep_category_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `ep_product` (
@@ -22,6 +28,9 @@ CREATE TABLE `ep_product` (
 	`description` varchar(500) NOT NULL,
 	`image` varchar(36) NOT NULL,
 	`price` double NOT NULL,
+	`condition` enum('new','used') NOT NULL DEFAULT 'new',
+	`stock` int,
+	`categoryId` char(21),
 	`createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` timestamp ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `ep_product_id` PRIMARY KEY(`id`)
@@ -42,6 +51,7 @@ CREATE TABLE `ep_shop` (
 CREATE INDEX `name_idx` ON `ep_product` (`name`);--> statement-breakpoint
 CREATE INDEX `name_idx` ON `ep_shop` (`name`);--> statement-breakpoint
 ALTER TABLE `ep_catalog` ADD CONSTRAINT `ep_catalog_shopId_ep_shop_id_fk` FOREIGN KEY (`shopId`) REFERENCES `ep_shop`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `ep_collection_product` ADD CONSTRAINT `ep_collection_product_catalogId_ep_catalog_id_fk` FOREIGN KEY (`catalogId`) REFERENCES `ep_catalog`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `ep_collection_product` ADD CONSTRAINT `ep_collection_product_productId_ep_product_id_fk` FOREIGN KEY (`productId`) REFERENCES `ep_product`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `ep_product` ADD CONSTRAINT `ep_product_shopId_ep_shop_id_fk` FOREIGN KEY (`shopId`) REFERENCES `ep_shop`(`id`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `ep_catalogProduct` ADD CONSTRAINT `ep_catalogProduct_catalogId_ep_catalog_id_fk` FOREIGN KEY (`catalogId`) REFERENCES `ep_catalog`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `ep_catalogProduct` ADD CONSTRAINT `ep_catalogProduct_productId_ep_product_id_fk` FOREIGN KEY (`productId`) REFERENCES `ep_product`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `ep_product` ADD CONSTRAINT `ep_product_shopId_ep_shop_id_fk` FOREIGN KEY (`shopId`) REFERENCES `ep_shop`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `ep_product` ADD CONSTRAINT `ep_product_categoryId_ep_category_id_fk` FOREIGN KEY (`categoryId`) REFERENCES `ep_category`(`id`) ON DELETE no action ON UPDATE no action;
