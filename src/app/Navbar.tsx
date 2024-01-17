@@ -6,12 +6,15 @@ import {
   DialogOverlay,
   DialogContent,
 } from "@/components/ui/dialog";
-import { SignIn, SignOutButton, auth, UserButton } from "@clerk/nextjs";
-import { ShoppingBag } from "lucide-react";
+import { SignIn, auth, UserButton } from "@clerk/nextjs";
+import { ShoppingBag, Store } from "lucide-react";
 import SignOut from "./sign-out";
+import { api } from "@/trpc/server";
+import Link from "next/link";
 
 export default async function NavBar() {
   const userId = auth().userId;
+  const shop = await api.shop.myShop.query();
 
   return (
     <header className="flex h-16 items-center self-stretch border-b border-b-border bg-background px-6">
@@ -20,7 +23,7 @@ export default async function NavBar() {
         <span className="text-xl">Happy Commerce</span>
       </span>
 
-      <nav className="ml-auto flex">
+      <nav className="ml-auto flex gap-5">
         {!userId && (
           <Dialog>
             <DialogTrigger asChild>
@@ -40,6 +43,19 @@ export default async function NavBar() {
 
         {userId && (
           <>
+            {!!shop ? (
+              <Button size={"sm"} variant={"secondary"} asChild>
+                <Link href={"/my-shop"}>
+                  <Store className="mr-2" /> My Shop
+                </Link>
+              </Button>
+            ) : (
+              <Button size={"sm"} asChild>
+                <Link href={"/my-shop/create"}>
+                  <Store className="mr-2" /> Create Shop
+                </Link>
+              </Button>
+            )}
             <UserButton />
             <SignOut />
           </>
