@@ -15,12 +15,13 @@ import {
   DialogPortal,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function UserSection({ shop }: { shop: MyShopOutput }) {
   const { isLoaded, user } = useUser();
 
   if (!isLoaded) {
-    return null;
+    return <Skeleton className="h-5 w-24 rounded-full" />;
   }
 
   if (!user) {

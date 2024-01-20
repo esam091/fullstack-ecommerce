@@ -1,16 +1,5 @@
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogPortal,
-  DialogOverlay,
-  DialogContent,
-} from "@/components/ui/dialog";
-import { SignIn, auth, UserButton } from "@clerk/nextjs";
-import { ShoppingBag, Store } from "lucide-react";
-import SignOut from "./sign-out";
+import { ShoppingBag } from "lucide-react";
 import { api } from "@/trpc/server";
-import Link from "next/link";
 import UserSection from "./user-section";
 
 export default async function NavBar() {
