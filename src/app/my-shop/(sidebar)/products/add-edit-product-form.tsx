@@ -12,6 +12,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { type products } from "@/server/db/schema";
 import FormTextarea from "@/components/ui/form-textarea";
@@ -114,9 +115,7 @@ export default function AddEditProductForm({ product }: Props) {
 }
 
 function ConditionRadioGroup() {
-  const { getFieldState, control } = useFormContext<ProductFields>();
-
-  const { error } = getFieldState("condition");
+  const { control } = useFormContext<ProductFields>();
 
   return (
     <FormField
@@ -140,7 +139,7 @@ function ConditionRadioGroup() {
               New
             </Label>
           </RadioGroup>
-          <FormError error={error} />
+          <FormMessage />
         </FormItem>
       )}
     />
