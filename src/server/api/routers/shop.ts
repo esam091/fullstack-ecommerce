@@ -9,7 +9,11 @@ import { eq, sql } from "drizzle-orm";
 import z from "zod";
 
 export const shopRouter = createTRPCRouter({
-  myShop: authenticatedProcedure.query(async ({ ctx }) => {
+  myShop: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.auth.userId) {
+      return null;
+    }
+
     const result = await ctx.db
       .select()
       .from(shops)
