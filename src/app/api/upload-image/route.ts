@@ -4,6 +4,7 @@ import sharp from "sharp";
 import fs from "fs";
 import { pipeline as pipelineCallback } from "stream";
 import { promisify } from "util";
+import { auth } from "@clerk/nextjs";
 
 const pipeline = promisify(pipelineCallback);
 
@@ -12,6 +13,12 @@ const supabaseKey = env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function POST(request: Request) {
+  if (!auth().userId) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 400,
+    });
+  }
+
   const file = await request.formData();
   const imageFile = file.get("image");
 
