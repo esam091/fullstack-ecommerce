@@ -30,7 +30,15 @@ export const productSchema = z.object({
         });
       }
     }),
-  condition: z.union([z.literal("new"), z.literal("used")]),
+  condition: z.union([
+    z.literal("new", {
+      errorMap: () => ({
+        // Can't get correct error message unless I put it here
+        message: "Pick one of the options",
+      }),
+    }),
+    z.literal("used"),
+  ]),
   categoryId: z.string({ required_error: "Select a category" }),
 });
 

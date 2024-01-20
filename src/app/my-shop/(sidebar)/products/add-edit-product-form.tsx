@@ -114,12 +114,9 @@ export default function AddEditProductForm({ product }: Props) {
 }
 
 function ConditionRadioGroup() {
-  const { getFieldState, register, watch, control } =
-    useFormContext<ProductFields>();
+  const { getFieldState, control } = useFormContext<ProductFields>();
 
   const { error } = getFieldState("condition");
-
-  console.log("mbe", watch("condition"));
 
   return (
     <FormField
