@@ -54,9 +54,9 @@ export const products = mysqlTable(
     price: double("price").notNull(),
     condition: mysqlEnum("condition", ["new", "used"]).notNull().default("new"),
     stock: int("stock"),
-    categoryId: char("categoryId", { length: 21 }).references(
-      () => categories.id,
-    ),
+    categoryId: char("categoryId", { length: 21 })
+      .notNull()
+      .references(() => categories.id),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

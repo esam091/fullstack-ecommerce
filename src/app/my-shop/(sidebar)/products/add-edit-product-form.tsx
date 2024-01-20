@@ -6,10 +6,12 @@ import { api } from "@/trpc/react";
 import { useToast } from "src/components/ui/use-toast";
 import FormTextField from "src/components/ui/form-textfield";
 import FormImageUpload from "src/components/ui/form-image-upload";
-import { Form } from "@/components/ui/form";
+import { Form, FormLabel } from "@/components/ui/form";
 import { type products } from "@/server/db/schema";
 import FormTextarea from "@/components/ui/form-textarea";
 import { LoadingButton } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 type Product = typeof products.$inferSelect;
 
@@ -20,7 +22,7 @@ type Props = {
 export default function AddEditProductForm({ product }: Props) {
   const form = useForm<ProductFields>({
     resolver: zodResolver(productSchema),
-    defaultValues: product,
+    defaultValues: { ...product },
   });
 
   const { handleSubmit, control } = form;
@@ -73,6 +75,14 @@ export default function AddEditProductForm({ product }: Props) {
           disabled={createOrUpdateProduct.isLoading}
         />
 
+        <FormTextField
+          control={control}
+          name="stock"
+          label="Stock"
+          placeholder="12"
+          disabled={createOrUpdateProduct.isLoading}
+        />
+
         <FormImageUpload control={control} name="image" label="Product Image" />
 
         <FormTextField
@@ -83,6 +93,8 @@ export default function AddEditProductForm({ product }: Props) {
           disabled={createOrUpdateProduct.isLoading}
         />
 
+        <ConditionRadioGroup />
+
         <LoadingButton
           type="submit"
           loading={createOrUpdateProduct.isLoading}
@@ -92,5 +104,23 @@ export default function AddEditProductForm({ product }: Props) {
         </LoadingButton>
       </form>
     </Form>
+  );
+}
+
+function ConditionRadioGroup() {
+  return (
+    <div className="space-y-2">
+      <FormLabel>Condition</FormLabel>
+      <RadioGroup className="flex gap-3">
+        <Label className="flex items-center">
+          <RadioGroupItem value="new" className="mr-1" />
+          New
+        </Label>
+        <Label className="flex items-center">
+          <RadioGroupItem value="used" className="mr-1" />
+          Used
+        </Label>
+      </RadioGroup>
+    </div>
   );
 }
