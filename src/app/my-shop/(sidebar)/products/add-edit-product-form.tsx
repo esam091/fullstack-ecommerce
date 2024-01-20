@@ -1,12 +1,18 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type ProductFields, productSchema } from "src/lib/schemas/product";
 import { api } from "@/trpc/react";
 import { useToast } from "src/components/ui/use-toast";
 import FormTextField from "src/components/ui/form-textfield";
 import FormImageUpload from "src/components/ui/form-image-upload";
-import { Form, FormLabel } from "@/components/ui/form";
+import {
+  Form,
+  FormError,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { type products } from "@/server/db/schema";
 import FormTextarea from "@/components/ui/form-textarea";
 import { LoadingButton } from "@/components/ui/button";
@@ -108,19 +114,38 @@ export default function AddEditProductForm({ product }: Props) {
 }
 
 function ConditionRadioGroup() {
+  const { getFieldState, register, watch, control } =
+    useFormContext<ProductFields>();
+
+  const { error } = getFieldState("condition");
+
+  console.log("mbe", watch("condition"));
+
   return (
-    <div className="space-y-2">
-      <FormLabel>Condition</FormLabel>
-      <RadioGroup className="flex gap-3">
-        <Label className="flex items-center">
-          <RadioGroupItem value="new" className="mr-1" />
-          New
-        </Label>
-        <Label className="flex items-center">
-          <RadioGroupItem value="used" className="mr-1" />
-          Used
-        </Label>
-      </RadioGroup>
-    </div>
+    <FormField
+      control={control}
+      name="condition"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Condition</FormLabel>
+          <RadioGroup
+            className="flex gap-3"
+            onValueChange={field.onChange}
+            onBlur={field.onBlur}
+            value={field.value}
+          >
+            <Label className="flex items-center">
+              <RadioGroupItem value="used" id="option-used" className="mr-1" />
+              Used
+            </Label>
+            <Label className="flex items-center">
+              <RadioGroupItem value="new" id="option-new" className="mr-1" />
+              New
+            </Label>
+          </RadioGroup>
+          <FormError error={error} />
+        </FormItem>
+      )}
+    />
   );
 }
