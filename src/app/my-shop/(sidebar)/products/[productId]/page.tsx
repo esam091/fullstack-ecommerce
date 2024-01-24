@@ -12,9 +12,11 @@ export default async function Page({
     onlyMine: true,
   });
 
+  const categories = await api.product.getCategories.query();
+
   if (!product) {
     notFound();
   }
 
-  return <AddEditProductForm product={product} />;
+  return <AddEditProductForm product={product} categories={categories} />;
 }

@@ -93,7 +93,10 @@ export default function AddEditProductForm({ product, categories }: Props) {
           disabled={createOrUpdateProduct.isLoading}
         />
 
-        <ProductCategoryField categories={categories} />
+        <ProductCategoryField
+          categories={categories}
+          categoryId={product?.categoryId}
+        />
 
         <FormTextField
           control={control}
@@ -161,8 +164,10 @@ function ConditionRadioGroup() {
 
 function ProductCategoryField({
   categories,
+  categoryId,
 }: {
   categories: inferRouterOutputs<AppRouter>["product"]["getCategories"];
+  categoryId?: string;
 }) {
   const { control } = useFormContext<ProductFields>();
 
@@ -175,7 +180,7 @@ function ProductCategoryField({
           <FormLabel>Product Category</FormLabel>
 
           <FormControl>
-            <Select onValueChange={field.onChange}>
+            <Select onValueChange={field.onChange} defaultValue={categoryId}>
               <SelectTrigger>
                 <SelectValue placeholder="Choose a category" />
               </SelectTrigger>
