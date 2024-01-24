@@ -193,6 +193,7 @@ function ProductCategoryField({
               </SelectContent>
             </Select>
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />
