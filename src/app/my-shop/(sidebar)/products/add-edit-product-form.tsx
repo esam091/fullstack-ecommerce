@@ -93,7 +93,7 @@ export default function AddEditProductForm({ product, categories }: Props) {
           disabled={createOrUpdateProduct.isLoading}
         />
 
-        <ProductCategoryCombobox categories={categories} />
+        <ProductCategoryField categories={categories} />
 
         <FormTextField
           control={control}
@@ -159,7 +159,7 @@ function ConditionRadioGroup() {
   );
 }
 
-function ProductCategoryCombobox({
+function ProductCategoryField({
   categories,
 }: {
   categories: inferRouterOutputs<AppRouter>["product"]["getCategories"];
