@@ -6,7 +6,7 @@ import {
   shopOwnerProcedure,
 } from "@/server/api/trpc";
 import { db } from "@/server/db";
-import { products, shops } from "@/server/db/schema";
+import { categories, products, shops } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
@@ -104,4 +104,8 @@ export const productRouter = createTRPCRouter({
 
       return result?.product;
     }),
+
+  getCategories: publicProcedure.query(async () => {
+    return db.select().from(categories);
+  }),
 });

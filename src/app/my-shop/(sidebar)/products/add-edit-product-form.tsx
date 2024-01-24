@@ -8,6 +8,7 @@ import FormTextField from "src/components/ui/form-textfield";
 import FormImageUpload from "src/components/ui/form-image-upload";
 import {
   Form,
+  FormControl,
   FormError,
   FormField,
   FormItem,
@@ -19,14 +20,24 @@ import FormTextarea from "@/components/ui/form-textarea";
 import { LoadingButton } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "@/server/api/root";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { SelectValue } from "@radix-ui/react-select";
 
 type Product = typeof products.$inferSelect;
 
 type Props = {
   product?: Product;
+  categories: inferRouterOutputs<AppRouter>["product"]["getCategories"];
 };
 
-export default function AddEditProductForm({ product }: Props) {
+export default function AddEditProductForm({ product, categories }: Props) {
   const form = useForm<ProductFields>({
     resolver: zodResolver(productSchema),
     defaultValues: { ...product },
@@ -81,6 +92,8 @@ export default function AddEditProductForm({ product }: Props) {
           label="Product Description"
           disabled={createOrUpdateProduct.isLoading}
         />
+
+        <ProductCategoryCombobox categories={categories} />
 
         <FormTextField
           control={control}
@@ -140,6 +153,41 @@ function ConditionRadioGroup() {
             </Label>
           </RadioGroup>
           <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+function ProductCategoryCombobox({
+  categories,
+}: {
+  categories: inferRouterOutputs<AppRouter>["product"]["getCategories"];
+}) {
+  const { control } = useFormContext<ProductFields>();
+
+  return (
+    <FormField
+      control={control}
+      name="categoryId"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Product Category</FormLabel>
+
+          <FormControl>
+            <Select onValueChange={field.onChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormControl>
         </FormItem>
       )}
     />
