@@ -7,6 +7,11 @@ export default async function Page({
 }) {
   const products = await api.product.search.query({
     keyword: searchParams.q,
+    minPrice: searchParams.min,
+    maxPrice: searchParams.max,
+    condition: searchParams.c,
+    categoryId: searchParams.cat,
+    sort: searchParams.s,
   });
 
   return (
