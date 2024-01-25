@@ -8,7 +8,7 @@ import {
 import { db } from "@/server/db";
 import { categories, products, shops } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, eq, getTableColumns } from "drizzle-orm";
+import { type SQLWrapper, and, eq, getTableColumns, like } from "drizzle-orm";
 import { z } from "zod";
 
 const productIdInput = z.object({
@@ -108,4 +108,29 @@ export const productRouter = createTRPCRouter({
   getCategories: publicProcedure.query(async () => {
     return db.select().from(categories);
   }),
+
+  search: publicProcedure
+    .input(
+      z.object({
+        keyword: z.string().optional(),
+        minPrice: z.number().optional(),
+        maxPrice: z.number().optional(),
+        condition: z.union([z.literal("new"), z.literal("used")]).optional(),
+        categoryId: z.string().optional(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const conditions: SQLWrapper[] = [];
+
+      if (input.keyword) {
+        conditions.push(like(products.name, `%${input.keyword}%`));
+      }
+
+      const result = ctx.db
+        .select()
+        .from(products)
+        .where(and(...conditions));
+
+      return await result;
+    }),
 });
