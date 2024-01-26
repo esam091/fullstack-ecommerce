@@ -13,6 +13,7 @@ export default function SearchBar() {
 
   return (
     <form
+      id="search-form"
       className="flex-1"
       onSubmit={(event) => {
         event.preventDefault();

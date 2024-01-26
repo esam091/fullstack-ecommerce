@@ -43,3 +43,26 @@ export const productSchema = z.object({
 });
 
 export type ProductFields = z.infer<typeof productSchema>;
+
+export const searchSchema = z.object({
+  keyword: z.string().optional(),
+  minPrice: z.number({ coerce: true }).optional().catch(undefined),
+  maxPrice: z.number({ coerce: true }).optional().catch(undefined),
+  condition: z
+    .union([z.literal("new"), z.literal("used")])
+    .optional()
+    .catch(undefined),
+  categoryId: z.string().optional(),
+  sort: z
+    .union([
+      z.literal("p_asc").describe("Cheapest"),
+      z.literal("p_desc").describe("Most Expensive"),
+      z.literal("new").describe("Newest"),
+      z.literal("old").describe("Oldest"),
+    ])
+    .optional()
+    .catch(undefined),
+});
+
+export type ProductSearchParams = z.TypeOf<typeof searchSchema>;
+export type ProductSearchParamsInput = z.input<typeof searchSchema>;

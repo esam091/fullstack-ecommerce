@@ -1,4 +1,4 @@
-import { productSchema } from "@/lib/schemas/product";
+import { productSchema, searchSchema } from "@/lib/schemas/product";
 import {
   authenticatedProcedure,
   createTRPCRouter,
@@ -119,68 +119,46 @@ export const productRouter = createTRPCRouter({
     return db.select().from(categories);
   }),
 
-  search: publicProcedure
-    .input(
-      z.object({
-        keyword: z.string().optional(),
-        minPrice: z.number({ coerce: true }).optional().catch(undefined),
-        maxPrice: z.number({ coerce: true }).optional().catch(undefined),
-        condition: z
-          .union([z.literal("new"), z.literal("used")])
-          .optional()
-          .catch(undefined),
-        categoryId: z.string().optional(),
-        sort: z
-          .union([
-            z.literal("p_asc").describe("Cheapest"),
-            z.literal("p_desc").describe("Most Expensive"),
-            z.literal("new").describe("Newest"),
-            z.literal("old").describe("Oldest"),
-          ])
-          .optional()
-          .catch(undefined),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      const conditions: SQLWrapper[] = [];
+  search: publicProcedure.input(searchSchema).query(async ({ input, ctx }) => {
+    const conditions: SQLWrapper[] = [];
 
-      if (input.keyword) {
-        conditions.push(like(products.name, `%${input.keyword}%`));
-      }
+    if (input.keyword) {
+      conditions.push(like(products.name, `%${input.keyword}%`));
+    }
 
-      if (input.minPrice) {
-        conditions.push(gte(products.price, input.minPrice));
-      }
+    if (input.minPrice) {
+      conditions.push(gte(products.price, input.minPrice));
+    }
 
-      if (input.maxPrice) {
-        conditions.push(lte(products.price, input.maxPrice));
-      }
+    if (input.maxPrice) {
+      conditions.push(lte(products.price, input.maxPrice));
+    }
 
-      if (input.condition) {
-        conditions.push(eq(products.condition, input.condition));
-      }
+    if (input.condition) {
+      conditions.push(eq(products.condition, input.condition));
+    }
 
-      if (input.categoryId) {
-        conditions.push(eq(products.categoryId, input.categoryId));
-      }
+    if (input.categoryId) {
+      conditions.push(eq(products.categoryId, input.categoryId));
+    }
 
-      let result = ctx.db
-        .select()
-        .from(products)
-        .where(and(...conditions));
+    let result = ctx.db
+      .select()
+      .from(products)
+      .where(and(...conditions));
 
-      if (input.sort) {
-        result = result.orderBy(
-          input.sort === "p_asc"
-            ? asc(products.price)
-            : input.sort === "p_desc"
-              ? desc(products.price)
-              : input.sort === "new"
-                ? desc(products.createdAt)
-                : asc(products.createdAt),
-        );
-      }
+    if (input.sort) {
+      result = result.orderBy(
+        input.sort === "p_asc"
+          ? asc(products.price)
+          : input.sort === "p_desc"
+            ? desc(products.price)
+            : input.sort === "new"
+              ? desc(products.createdAt)
+              : asc(products.createdAt),
+      );
+    }
 
-      return await result;
-    }),
+    return await result;
+  }),
 });
