@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/navigation";
 import formAction from "./action";
 import { useRef } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function FilterBar({
   searchParams,
@@ -89,6 +90,26 @@ export default function FilterBar({
                 defaultValue={searchParams.maxPrice?.toString()}
               />
             </Label>
+
+            <Label>Condition</Label>
+            <div className="flex">
+              <Label>
+                <Checkbox
+                  value="new"
+                  onCheckedChange={(e) => {
+                    if (e === "indeterminate") {
+                      return;
+                    }
+
+                    updateSearchParams({
+                      condition: e ? "new" : undefined,
+                    });
+                  }}
+                ></Checkbox>
+                New
+              </Label>
+              <Checkbox value="used">Used</Checkbox>
+            </div>
           </form>
         </div>
       </div>
