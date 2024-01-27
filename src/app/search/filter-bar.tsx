@@ -10,6 +10,13 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { type GetCategoriesOutput } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function FilterBar({
   searchParams,
@@ -49,6 +56,10 @@ export default function FilterBar({
       urlSearchParams.append("u", "1");
     }
 
+    if (newSearchParams.sort) {
+      urlSearchParams.append("s", String(newSearchParams.sort));
+    }
+
     if (newSearchParams.categoryIds) {
       for (const id of newSearchParams.categoryIds) {
         urlSearchParams.append("c", id);
@@ -64,10 +75,30 @@ export default function FilterBar({
   return (
     <aside className="col-span-1 pb-12">
       <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Filters
-          </h2>
+        <div>
+          <h2 className="mb-2 text-lg font-semibold tracking-tight">Sort</h2>
+
+          <Select
+            onValueChange={(value) =>
+              updateSearchParams({
+                sort: value,
+              })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Choose" />
+              <SelectContent>
+                <SelectItem value="p_asc">Cheapest Price</SelectItem>
+                <SelectItem value="p_desc">Most Expensive</SelectItem>
+                <SelectItem value="new">Newest</SelectItem>
+                <SelectItem value="old">Oldest</SelectItem>
+              </SelectContent>
+            </SelectTrigger>
+          </Select>
+        </div>
+
+        <div className="py-2">
+          <h2 className="mb-2 text-lg font-semibold tracking-tight">Filters</h2>
           <form
             id="filter-form"
             className="space-y-2"

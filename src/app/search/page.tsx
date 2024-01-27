@@ -23,7 +23,7 @@ export default async function Page({
   const categories = api.product.getCategories.query();
 
   return (
-    <div className="grid grid-cols-5">
+    <div className="grid grid-cols-5 gap-8">
       <FilterBar
         searchParams={sanitizedSearchParams}
         categories={await categories}
