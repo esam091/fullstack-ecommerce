@@ -50,7 +50,6 @@ export const searchSchema = z.object({
   maxPrice: z.number({ coerce: true }).optional().catch(undefined),
   new: z.boolean().optional(),
   used: z.boolean().optional(),
-  categoryId: z.string().optional(),
   categoryIds: z.string().array().optional(),
   sort: z
     .union([
