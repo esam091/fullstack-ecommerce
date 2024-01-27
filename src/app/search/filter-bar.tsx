@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function FilterBar({
   searchParams,
@@ -76,9 +77,24 @@ export default function FilterBar({
     <aside className="col-span-1 pb-12">
       <div className="space-y-4 py-4">
         <div>
-          <h2 className="mb-2 text-lg font-semibold tracking-tight">Sort</h2>
+          <div className="flex items-baseline gap-1">
+            <h2 className="mb-2 text-lg font-semibold tracking-tight">Sort</h2>
+
+            <Button
+              size={"sm"}
+              variant={"ghost"}
+              onClick={() =>
+                updateSearchParams({
+                  sort: null,
+                })
+              }
+            >
+              clear
+            </Button>
+          </div>
 
           <Select
+            value={searchParams.sort ?? ""}
             onValueChange={(value) =>
               updateSearchParams({
                 sort: value,
@@ -87,13 +103,13 @@ export default function FilterBar({
           >
             <SelectTrigger>
               <SelectValue placeholder="Choose" />
-              <SelectContent>
-                <SelectItem value="p_asc">Cheapest Price</SelectItem>
-                <SelectItem value="p_desc">Most Expensive</SelectItem>
-                <SelectItem value="new">Newest</SelectItem>
-                <SelectItem value="old">Oldest</SelectItem>
-              </SelectContent>
             </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="p_asc">Cheapest Price</SelectItem>
+              <SelectItem value="p_desc">Most Expensive</SelectItem>
+              <SelectItem value="new">Newest</SelectItem>
+              <SelectItem value="old">Oldest</SelectItem>
+            </SelectContent>
           </Select>
         </div>
 
@@ -101,7 +117,7 @@ export default function FilterBar({
           <h2 className="mb-2 text-lg font-semibold tracking-tight">Filters</h2>
           <form
             id="filter-form"
-            className="space-y-2"
+            className="space-y-3"
             onSubmit={(e) => {
               e.preventDefault();
 
@@ -114,7 +130,8 @@ export default function FilterBar({
             <button type="submit" className="hidden">
               submit
             </button>
-            <Label>
+
+            <Label className="flex flex-col gap-1">
               Minimum Price{" "}
               <Input
                 ref={minRef}
@@ -122,7 +139,7 @@ export default function FilterBar({
               />
             </Label>
 
-            <Label>
+            <Label className="flex flex-col gap-1">
               Maximum Price{" "}
               <Input
                 ref={maxRef}
@@ -130,41 +147,43 @@ export default function FilterBar({
               />
             </Label>
 
-            <Label>Condition</Label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-1">
-                <Checkbox
-                  value="new"
-                  defaultChecked={searchParams.new}
-                  onCheckedChange={(value) => {
-                    if (value === "indeterminate") {
-                      return;
-                    }
+            <div>
+              <Label>Condition</Label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-1">
+                  <Checkbox
+                    value="new"
+                    defaultChecked={searchParams.new}
+                    onCheckedChange={(value) => {
+                      if (value === "indeterminate") {
+                        return;
+                      }
 
-                    updateSearchParams({
-                      new: value,
-                    });
-                  }}
-                />
-                New
-              </label>
+                      updateSearchParams({
+                        new: value,
+                      });
+                    }}
+                  />
+                  New
+                </label>
 
-              <label className="flex items-center gap-1">
-                <Checkbox
-                  value="used"
-                  defaultChecked={searchParams.used}
-                  onCheckedChange={(value) => {
-                    if (value === "indeterminate") {
-                      return;
-                    }
+                <label className="flex items-center gap-1">
+                  <Checkbox
+                    value="used"
+                    defaultChecked={searchParams.used}
+                    onCheckedChange={(value) => {
+                      if (value === "indeterminate") {
+                        return;
+                      }
 
-                    updateSearchParams({
-                      used: value,
-                    });
-                  }}
-                />
-                Used
-              </label>
+                      updateSearchParams({
+                        used: value,
+                      });
+                    }}
+                  />
+                  Used
+                </label>
+              </div>
             </div>
 
             <div>

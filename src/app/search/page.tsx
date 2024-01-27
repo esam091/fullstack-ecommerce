@@ -2,6 +2,8 @@ import { api } from "@/trpc/server";
 import FilterBar from "./filter-bar";
 import { searchSchema } from "@/lib/schemas/product";
 import { ProductCard } from "../shop/[shopId]/ProductCard";
+import EmptyView from "@/components/ui/empty-view";
+import { PackageOpen, SearchX } from "lucide-react";
 
 export default async function Page({
   searchParams,
@@ -19,8 +21,8 @@ export default async function Page({
       typeof searchParams.c === "string" ? [searchParams.c] : searchParams.c,
   });
 
-  const products = api.product.search.query(sanitizedSearchParams);
   const categories = api.product.getCategories.query();
+  const products = await api.product.search.query(sanitizedSearchParams);
 
   return (
     <div className="grid grid-cols-5 gap-8">
@@ -30,11 +32,20 @@ export default async function Page({
       />
       <div className="col-span-4">
         Products
-        <div className="grid grid-cols-4 gap-8">
-          {(await products).map((product) => (
-            <ProductCard product={product.product} shop={product.shop} />
-          ))}
-        </div>
+        {!products.length && (
+          <EmptyView
+            icon={<SearchX size={40} />}
+            title="No products found"
+            description="Try tweaking your search keywords or filters"
+          />
+        )}
+        {!!products.length && (
+          <div className="grid grid-cols-4 gap-8">
+            {products.map((product) => (
+              <ProductCard product={product.product} shop={product.shop} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
