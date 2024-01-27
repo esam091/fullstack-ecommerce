@@ -14,6 +14,8 @@ export default async function Page({
     condition: searchParams.c,
     categoryId: searchParams.cat,
     sort: searchParams.s,
+    new: searchParams.n === "1",
+    used: searchParams.u === "1",
   });
 
   const products = await api.product.search.query(sanitizedSearchParams);

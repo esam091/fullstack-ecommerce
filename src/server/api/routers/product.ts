@@ -18,6 +18,7 @@ import {
   lte,
   asc,
   desc,
+  or,
 } from "drizzle-orm";
 import { z } from "zod";
 
@@ -134,12 +135,25 @@ export const productRouter = createTRPCRouter({
       conditions.push(lte(products.price, input.maxPrice));
     }
 
-    if (input.condition) {
-      conditions.push(eq(products.condition, input.condition));
-    }
-
     if (input.categoryId) {
       conditions.push(eq(products.categoryId, input.categoryId));
+    }
+
+    if (!!input.new || !!input.used) {
+      const orConditions: SQLWrapper[] = [];
+      if (input.new) {
+        orConditions.push(eq(products.condition, "new"));
+      }
+
+      if (input.used) {
+        orConditions.push(eq(products.condition, "used"));
+      }
+
+      const a = or(...orConditions);
+
+      if (a) {
+        conditions.push(a);
+      }
     }
 
     let result = ctx.db

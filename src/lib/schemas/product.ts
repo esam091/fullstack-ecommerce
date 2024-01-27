@@ -48,6 +48,8 @@ export const searchSchema = z.object({
   keyword: z.string().optional(),
   minPrice: z.number({ coerce: true }).optional().catch(undefined),
   maxPrice: z.number({ coerce: true }).optional().catch(undefined),
+  new: z.boolean().optional(),
+  used: z.boolean().optional(),
   condition: z
     .union([z.literal("new"), z.literal("used")])
     .optional()

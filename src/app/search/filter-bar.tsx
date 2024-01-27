@@ -3,11 +3,10 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  ProductSearchParamsInput,
+  type ProductSearchParamsInput,
   type ProductSearchParams,
 } from "@/lib/schemas/product";
 import { useRouter } from "next/navigation";
-import formAction from "./action";
 import { useRef } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -16,6 +15,7 @@ export default function FilterBar({
 }: {
   searchParams: ProductSearchParams;
 }) {
+  console.log("search params", searchParams);
   const router = useRouter();
 
   function updateSearchParams(changedParams: ProductSearchParamsInput) {
@@ -45,6 +45,14 @@ export default function FilterBar({
 
     if (newSearchParams.categoryId) {
       urlSearchParams.append("cat", newSearchParams.categoryId);
+    }
+
+    if (newSearchParams.new) {
+      urlSearchParams.append("n", "1");
+    }
+
+    if (newSearchParams.used) {
+      urlSearchParams.append("u", "1");
     }
 
     router.push(`search?${urlSearchParams.toString()}`);
@@ -92,23 +100,40 @@ export default function FilterBar({
             </Label>
 
             <Label>Condition</Label>
-            <div className="flex">
-              <Label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-1">
                 <Checkbox
                   value="new"
+                  defaultChecked={searchParams.new}
                   onCheckedChange={(e) => {
                     if (e === "indeterminate") {
                       return;
                     }
 
                     updateSearchParams({
-                      condition: e ? "new" : undefined,
+                      new: e,
                     });
                   }}
-                ></Checkbox>
+                />
                 New
-              </Label>
-              <Checkbox value="used">Used</Checkbox>
+              </label>
+
+              <label className="flex items-center gap-1">
+                <Checkbox
+                  value="used"
+                  defaultChecked={searchParams.used}
+                  onCheckedChange={(e) => {
+                    if (e === "indeterminate") {
+                      return;
+                    }
+
+                    updateSearchParams({
+                      used: e,
+                    });
+                  }}
+                />
+                Used
+              </label>
             </div>
           </form>
         </div>
