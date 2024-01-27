@@ -40,7 +40,7 @@ export function ProductCard({
               height={40}
               src={imageUrl(shop.image)}
               alt="Shop picture"
-              className="mr-3 aspect-square object-cover"
+              className="mr-3 aspect-square rounded-sm object-cover"
             />
 
             <div>

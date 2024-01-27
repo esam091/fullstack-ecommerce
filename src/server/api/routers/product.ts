@@ -160,6 +160,7 @@ export const productRouter = createTRPCRouter({
     let result = ctx.db
       .select()
       .from(products)
+      .innerJoin(shops, eq(shops.id, products.shopId))
       .where(and(...conditions));
 
     if (input.sort) {

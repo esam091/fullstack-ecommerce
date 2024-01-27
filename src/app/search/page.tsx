@@ -1,6 +1,7 @@
 import { api } from "@/trpc/server";
 import FilterBar from "./filter-bar";
 import { searchSchema } from "@/lib/schemas/product";
+import { ProductCard } from "../shop/[shopId]/ProductCard";
 
 export default async function Page({
   searchParams,
@@ -29,7 +30,11 @@ export default async function Page({
       />
       <div className="col-span-4">
         Products
-        <code>{JSON.stringify(await products, null, 2)}</code>
+        <div className="grid grid-cols-4 gap-8">
+          {(await products).map((product) => (
+            <ProductCard product={product.product} shop={product.shop} />
+          ))}
+        </div>
       </div>
     </div>
   );
