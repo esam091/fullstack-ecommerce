@@ -9,13 +9,15 @@ import {
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { type GetCategoriesOutput } from "@/lib/utils";
 
 export default function FilterBar({
   searchParams,
+  categories,
 }: {
   searchParams: ProductSearchParams;
+  categories: GetCategoriesOutput;
 }) {
-  console.log("search params", searchParams);
   const router = useRouter();
 
   function updateSearchParams(changedParams: ProductSearchParamsInput) {
@@ -105,13 +107,13 @@ export default function FilterBar({
                 <Checkbox
                   value="new"
                   defaultChecked={searchParams.new}
-                  onCheckedChange={(e) => {
-                    if (e === "indeterminate") {
+                  onCheckedChange={(value) => {
+                    if (value === "indeterminate") {
                       return;
                     }
 
                     updateSearchParams({
-                      new: e,
+                      new: value,
                     });
                   }}
                 />
@@ -122,18 +124,31 @@ export default function FilterBar({
                 <Checkbox
                   value="used"
                   defaultChecked={searchParams.used}
-                  onCheckedChange={(e) => {
-                    if (e === "indeterminate") {
+                  onCheckedChange={(value) => {
+                    if (value === "indeterminate") {
                       return;
                     }
 
                     updateSearchParams({
-                      used: e,
+                      used: value,
                     });
                   }}
                 />
                 Used
               </label>
+            </div>
+
+            <div>
+              <Label>Categories</Label>
+              <div>
+                {categories.map((category) => (
+                  <div key={category.id}>
+                    <label>
+                      <Checkbox value={category.id} /> {category.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
           </form>
         </div>

@@ -18,14 +18,18 @@ export default async function Page({
     used: searchParams.u === "1",
   });
 
-  const products = await api.product.search.query(sanitizedSearchParams);
+  const products = api.product.search.query(sanitizedSearchParams);
+  const categories = api.product.getCategories.query();
 
   return (
     <div className="grid grid-cols-5">
-      <FilterBar searchParams={sanitizedSearchParams} />
+      <FilterBar
+        searchParams={sanitizedSearchParams}
+        categories={await categories}
+      />
       <div className="col-span-4">
         Products
-        <code>{JSON.stringify(products, null, 2)}</code>
+        <code>{JSON.stringify(await products, null, 2)}</code>
       </div>
     </div>
   );

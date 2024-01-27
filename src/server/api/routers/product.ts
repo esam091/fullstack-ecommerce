@@ -140,19 +140,19 @@ export const productRouter = createTRPCRouter({
     }
 
     if (!!input.new || !!input.used) {
-      const orConditions: SQLWrapper[] = [];
+      const orParams: SQLWrapper[] = [];
       if (input.new) {
-        orConditions.push(eq(products.condition, "new"));
+        orParams.push(eq(products.condition, "new"));
       }
 
       if (input.used) {
-        orConditions.push(eq(products.condition, "used"));
+        orParams.push(eq(products.condition, "used"));
       }
 
-      const a = or(...orConditions);
+      const orCondition = or(...orParams);
 
-      if (a) {
-        conditions.push(a);
+      if (orCondition) {
+        conditions.push(orCondition);
       }
     }
 

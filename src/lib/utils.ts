@@ -9,6 +9,7 @@ type RouterInput = inferRouterInputs<AppRouter>;
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type MyShopOutput = RouterOutput["shop"]["myShop"];
+export type GetCategoriesOutput = RouterOutput["product"]["getCategories"];
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
