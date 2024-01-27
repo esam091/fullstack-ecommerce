@@ -41,20 +41,18 @@ export default function FilterBar({
       urlSearchParams.append("max", String(newSearchParams.maxPrice));
     }
 
-    if (newSearchParams.condition) {
-      urlSearchParams.append("c", String(newSearchParams.condition));
-    }
-
-    if (newSearchParams.categoryId) {
-      urlSearchParams.append("cat", newSearchParams.categoryId);
-    }
-
     if (newSearchParams.new) {
       urlSearchParams.append("n", "1");
     }
 
     if (newSearchParams.used) {
       urlSearchParams.append("u", "1");
+    }
+
+    if (newSearchParams.categoryIds) {
+      for (const id of newSearchParams.categoryIds) {
+        urlSearchParams.append("c", id);
+      }
     }
 
     router.push(`search?${urlSearchParams.toString()}`);
@@ -144,7 +142,33 @@ export default function FilterBar({
                 {categories.map((category) => (
                   <div key={category.id}>
                     <label>
-                      <Checkbox value={category.id} /> {category.name}
+                      <Checkbox
+                        value={category.id}
+                        checked={
+                          searchParams.categoryIds?.includes(category.id) ??
+                          false
+                        }
+                        onCheckedChange={(value) => {
+                          if (value === "indeterminate") {
+                            return;
+                          }
+
+                          let categoryIds = searchParams.categoryIds ?? [];
+
+                          if (value) {
+                            categoryIds = [...categoryIds, category.id];
+                          } else {
+                            categoryIds = categoryIds.filter(
+                              (id) => id !== category.id,
+                            );
+                          }
+
+                          updateSearchParams({
+                            categoryIds,
+                          });
+                        }}
+                      />{" "}
+                      {category.name}
                     </label>
                   </div>
                 ))}

@@ -5,17 +5,17 @@ import { searchSchema } from "@/lib/schemas/product";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Record<string, string>;
+  searchParams: Record<string, string | string[]>;
 }) {
   const sanitizedSearchParams = searchSchema.parse({
     keyword: searchParams.q,
     minPrice: searchParams.min,
     maxPrice: searchParams.max,
-    condition: searchParams.c,
-    categoryId: searchParams.cat,
     sort: searchParams.s,
     new: searchParams.n === "1",
     used: searchParams.u === "1",
+    categoryIds:
+      typeof searchParams.c === "string" ? [searchParams.c] : searchParams.c,
   });
 
   const products = api.product.search.query(sanitizedSearchParams);

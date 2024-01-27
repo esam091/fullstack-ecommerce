@@ -19,6 +19,7 @@ import {
   asc,
   desc,
   or,
+  inArray,
 } from "drizzle-orm";
 import { z } from "zod";
 
@@ -135,8 +136,8 @@ export const productRouter = createTRPCRouter({
       conditions.push(lte(products.price, input.maxPrice));
     }
 
-    if (input.categoryId) {
-      conditions.push(eq(products.categoryId, input.categoryId));
+    if (input.categoryIds && input.categoryIds.length > 0) {
+      conditions.push(inArray(products.categoryId, input.categoryIds));
     }
 
     if (!!input.new || !!input.used) {
