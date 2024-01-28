@@ -74,9 +74,11 @@ export default async function Page({
             <div className="mt-10">
               <Pagination>
                 <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href={pageHref(page - 1)} />
-                  </PaginationItem>
+                  {page > 1 && (
+                    <PaginationItem>
+                      <PaginationPrevious href={pageHref(page - 1)} />
+                    </PaginationItem>
+                  )}
 
                   <PaginationItem>
                     <PaginationLink href={pageHref(1)} isActive={page === 1}>
@@ -134,9 +136,11 @@ export default async function Page({
                     </PaginationItem>
                   )}
 
-                  <PaginationItem>
-                    <PaginationNext href={pageHref(page + 1)} />
-                  </PaginationItem>
+                  {page < pageCount && (
+                    <PaginationItem>
+                      <PaginationNext href={pageHref(page + 1)} />
+                    </PaginationItem>
+                  )}
                 </PaginationContent>
               </Pagination>
             </div>
