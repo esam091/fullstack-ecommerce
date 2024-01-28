@@ -52,9 +52,6 @@ export default async function Page({
         categories={await categories}
       />
       <div className="col-span-4">
-        <div>
-          count: {pageCount}, page: {page}
-        </div>
         Products
         {!rows.length && (
           <EmptyView
