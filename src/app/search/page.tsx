@@ -38,6 +38,13 @@ export default async function Page({
   );
   const page = sanitizedSearchParams.page ?? 1;
 
+  function pageHref(page: number) {
+    return `/search?${buildSearchParam({
+      ...sanitizedSearchParams,
+      page,
+    }).toString()}`;
+  }
+
   return (
     <div className="grid grid-cols-5 gap-8">
       <FilterBar
@@ -68,33 +75,59 @@ export default async function Page({
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious href="#" />
+                    <PaginationPrevious href={pageHref(page - 1)} />
                   </PaginationItem>
 
                   <PaginationItem>
-                    <PaginationLink
-                      href={`/search?${buildSearchParam({
-                        ...sanitizedSearchParams,
-                        page: 1,
-                      }).toString()}`}
-                      isActive={page === 1}
-                    >
+                    <PaginationLink href={pageHref(1)} isActive={page === 1}>
                       1
                     </PaginationLink>
                   </PaginationItem>
 
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
+                  {page - 2 > 1 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+
+                  {/* current page - 1 */}
+                  {pageCount > 2 && page > 2 && (
+                    <PaginationItem>
+                      <PaginationLink href={pageHref(page - 1)}>
+                        {page - 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {/* current page */}
+                  {pageCount > 2 && page > 1 && page < pageCount && (
+                    <PaginationItem>
+                      <PaginationLink href={pageHref(page)} isActive>
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {/* current page + 1 */}
+                  {page + 1 < pageCount && (
+                    <PaginationItem>
+                      <PaginationLink href={pageHref(page + 1)}>
+                        {page + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
+                  {page + 2 < pageCount && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
 
                   {pageCount > 1 && (
                     <PaginationItem>
                       <PaginationLink
                         isActive={page === pageCount}
-                        href={`/search?${buildSearchParam({
-                          ...sanitizedSearchParams,
-                          page: pageCount,
-                        }).toString()}`}
+                        href={pageHref(pageCount)}
                       >
                         {pageCount}
                       </PaginationLink>
@@ -102,12 +135,7 @@ export default async function Page({
                   )}
 
                   <PaginationItem>
-                    <PaginationNext
-                      href={`/search?${buildSearchParam({
-                        ...sanitizedSearchParams,
-                        page: page + 1,
-                      }).toString()}`}
-                    />
+                    <PaginationNext href={pageHref(page + 1)} />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>

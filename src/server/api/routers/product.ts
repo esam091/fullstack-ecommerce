@@ -158,6 +158,8 @@ export const productRouter = createTRPCRouter({
       }
     }
 
+    const pageSize = 8;
+
     let result = ctx.db
       .select()
       .from(products)
@@ -166,7 +168,7 @@ export const productRouter = createTRPCRouter({
 
     const cnt = ctx.db
       .select({
-        rowCount: sql<number>`cast(ceil(count(*) / 8) as unsigned)`,
+        rowCount: sql<number>`cast(ceil(count(*) / ${pageSize}) as unsigned)`,
       })
       .from(products)
       .where(and(...conditions));
@@ -183,7 +185,6 @@ export const productRouter = createTRPCRouter({
       );
     }
 
-    const pageSize = 8;
     const pageNumber = input.page ?? 1;
     result = result.limit(pageSize).offset((pageNumber - 1) * pageSize);
 
