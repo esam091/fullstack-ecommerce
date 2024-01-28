@@ -4,6 +4,15 @@ import { searchSchema } from "@/lib/schemas/product";
 import { ProductCard } from "../shop/[shopId]/ProductCard";
 import EmptyView from "@/components/ui/empty-view";
 import { SearchX } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default async function Page({
   searchParams,
@@ -41,11 +50,35 @@ export default async function Page({
           />
         )}
         {!!products.length && (
-          <div className="grid grid-cols-4 gap-8">
-            {products.map((product) => (
-              <ProductCard product={product.product} shop={product.shop} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-4 gap-8">
+              {products.map((product) => (
+                <ProductCard product={product.product} shop={product.shop} />
+              ))}
+            </div>
+
+            <div>
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" />
+                  </PaginationItem>
+
+                  <PaginationItem>
+                    <PaginationLink href="#">1</PaginationLink>
+                  </PaginationItem>
+
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+
+                  <PaginationItem>
+                    <PaginationNext href="#" />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </>
         )}
       </div>
     </div>
