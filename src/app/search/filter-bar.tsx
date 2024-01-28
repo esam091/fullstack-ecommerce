@@ -80,17 +80,19 @@ export default function FilterBar({
           <div className="flex items-baseline gap-1">
             <h2 className="mb-2 text-lg font-semibold tracking-tight">Sort</h2>
 
-            <Button
-              size={"sm"}
-              variant={"ghost"}
-              onClick={() =>
-                updateSearchParams({
-                  sort: null,
-                })
-              }
-            >
-              clear
-            </Button>
+            {!!searchParams.sort && (
+              <Button
+                size={"sm"}
+                variant={"ghost"}
+                onClick={() =>
+                  updateSearchParams({
+                    sort: null,
+                  })
+                }
+              >
+                clear
+              </Button>
+            )}
           </div>
 
           <Select

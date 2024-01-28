@@ -60,6 +60,7 @@ export const searchSchema = z.object({
     ])
     .optional()
     .catch(undefined),
+  page: z.number({ coerce: true }).optional().catch(undefined),
 });
 
 export type ProductSearchParams = z.TypeOf<typeof searchSchema>;

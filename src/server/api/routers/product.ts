@@ -175,6 +175,10 @@ export const productRouter = createTRPCRouter({
       );
     }
 
+    const pageSize = 8;
+    const pageNumber = input.page ?? 1;
+    result = result.limit(pageSize).offset((pageNumber - 1) * pageSize);
+
     return await result;
   }),
 });

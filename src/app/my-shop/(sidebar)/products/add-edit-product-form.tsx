@@ -29,6 +29,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
+import { useRouter } from "next/navigation";
 
 type Product = typeof products.$inferSelect;
 
@@ -48,6 +49,8 @@ export default function AddEditProductForm({ product, categories }: Props) {
 
   const createOrUpdateProduct = api.product.createOrUpdate.useMutation();
 
+  const router = useRouter();
+
   const onSubmit = async (data: ProductFields) => {
     createOrUpdateProduct.mutate(
       {
@@ -59,6 +62,10 @@ export default function AddEditProductForm({ product, categories }: Props) {
           toast.toast({
             title: product?.id ? "Product updated" : "New product created",
           });
+
+          if (!product?.id) {
+            router.push("/my-shop/products");
+          }
         },
         onError: (error) => {
           toast.toast({

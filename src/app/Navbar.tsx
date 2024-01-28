@@ -2,7 +2,6 @@ import { ShoppingBag } from "lucide-react";
 import { api } from "@/trpc/server";
 import UserSection from "./user-section";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import SearchBar from "./search-bar";
 
 export default async function NavBar() {

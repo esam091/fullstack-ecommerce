@@ -3,7 +3,7 @@ import FilterBar from "./filter-bar";
 import { searchSchema } from "@/lib/schemas/product";
 import { ProductCard } from "../shop/[shopId]/ProductCard";
 import EmptyView from "@/components/ui/empty-view";
-import { PackageOpen, SearchX } from "lucide-react";
+import { SearchX } from "lucide-react";
 
 export default async function Page({
   searchParams,
@@ -19,6 +19,7 @@ export default async function Page({
     used: searchParams.u === "1",
     categoryIds:
       typeof searchParams.c === "string" ? [searchParams.c] : searchParams.c,
+    page: searchParams.p,
   });
 
   const categories = api.product.getCategories.query();
