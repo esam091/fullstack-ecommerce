@@ -20,6 +20,7 @@ import {
   desc,
   or,
   inArray,
+  sql,
 } from "drizzle-orm";
 import { z } from "zod";
 
@@ -163,6 +164,13 @@ export const productRouter = createTRPCRouter({
       .innerJoin(shops, eq(shops.id, products.shopId))
       .where(and(...conditions));
 
+    const cnt = ctx.db
+      .select({
+        rowCount: sql<number>`cast(ceil(count(*) / 8) as unsigned)`,
+      })
+      .from(products)
+      .where(and(...conditions));
+
     if (input.sort) {
       result = result.orderBy(
         input.sort === "p_asc"
@@ -179,6 +187,9 @@ export const productRouter = createTRPCRouter({
     const pageNumber = input.page ?? 1;
     result = result.limit(pageSize).offset((pageNumber - 1) * pageSize);
 
-    return await result;
+    return {
+      rows: await result,
+      pageCount: (await cnt)[0]?.rowCount ?? 0,
+    };
   }),
 });

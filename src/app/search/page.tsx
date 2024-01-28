@@ -13,6 +13,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import buildSearchParam from "./params";
 
 export default async function Page({
   searchParams,
@@ -32,7 +33,10 @@ export default async function Page({
   });
 
   const categories = api.product.getCategories.query();
-  const products = await api.product.search.query(sanitizedSearchParams);
+  const { rows, pageCount } = await api.product.search.query(
+    sanitizedSearchParams,
+  );
+  const page = sanitizedSearchParams.page ?? 1;
 
   return (
     <div className="grid grid-cols-5 gap-8">
@@ -41,23 +45,26 @@ export default async function Page({
         categories={await categories}
       />
       <div className="col-span-4">
+        <div>
+          count: {pageCount}, page: {page}
+        </div>
         Products
-        {!products.length && (
+        {!rows.length && (
           <EmptyView
             icon={<SearchX size={40} />}
             title="No products found"
             description="Try tweaking your search keywords or filters"
           />
         )}
-        {!!products.length && (
+        {!!rows.length && (
           <>
             <div className="grid grid-cols-4 gap-8">
-              {products.map((product) => (
+              {rows.map((product) => (
                 <ProductCard product={product.product} shop={product.shop} />
               ))}
             </div>
 
-            <div>
+            <div className="mt-10">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
@@ -65,15 +72,42 @@ export default async function Page({
                   </PaginationItem>
 
                   <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
+                    <PaginationLink
+                      href={`/search?${buildSearchParam({
+                        ...sanitizedSearchParams,
+                        page: 1,
+                      }).toString()}`}
+                      isActive={page === 1}
+                    >
+                      1
+                    </PaginationLink>
                   </PaginationItem>
 
                   <PaginationItem>
                     <PaginationEllipsis />
                   </PaginationItem>
 
+                  {pageCount > 1 && (
+                    <PaginationItem>
+                      <PaginationLink
+                        isActive={page === pageCount}
+                        href={`/search?${buildSearchParam({
+                          ...sanitizedSearchParams,
+                          page: pageCount,
+                        }).toString()}`}
+                      >
+                        {pageCount}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )}
+
                   <PaginationItem>
-                    <PaginationNext href="#" />
+                    <PaginationNext
+                      href={`/search?${buildSearchParam({
+                        ...sanitizedSearchParams,
+                        page: page + 1,
+                      }).toString()}`}
+                    />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>

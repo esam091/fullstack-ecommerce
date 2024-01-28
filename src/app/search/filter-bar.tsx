@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import buildSearchParam from "./params";
 
 export default function FilterBar({
   searchParams,
@@ -34,40 +35,7 @@ export default function FilterBar({
       ...changedParams,
     };
 
-    // console.log("new params", newSearchParams);
-    const urlSearchParams = new URLSearchParams();
-
-    if (newSearchParams.keyword) {
-      urlSearchParams.append("q", newSearchParams.keyword);
-    }
-
-    if (newSearchParams.minPrice) {
-      urlSearchParams.append("min", String(newSearchParams.minPrice));
-    }
-
-    if (newSearchParams.maxPrice) {
-      urlSearchParams.append("max", String(newSearchParams.maxPrice));
-    }
-
-    if (newSearchParams.new) {
-      urlSearchParams.append("n", "1");
-    }
-
-    if (newSearchParams.used) {
-      urlSearchParams.append("u", "1");
-    }
-
-    if (newSearchParams.sort) {
-      urlSearchParams.append("s", String(newSearchParams.sort));
-    }
-
-    if (newSearchParams.categoryIds) {
-      for (const id of newSearchParams.categoryIds) {
-        urlSearchParams.append("c", id);
-      }
-    }
-
-    router.push(`search?${urlSearchParams.toString()}`);
+    router.push(`search?${buildSearchParam(newSearchParams).toString()}`);
   }
 
   const minRef = useRef<HTMLInputElement>(null);
