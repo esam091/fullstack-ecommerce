@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { useRouter } from "next/navigation";
+import Turnstile, { useTurnstile } from "react-turnstile";
+import { env } from "@/env";
 
 type Product = typeof products.$inferSelect;
 
@@ -39,12 +41,20 @@ type Props = {
 };
 
 export default function AddEditProductForm({ product, categories }: Props) {
+  const turnstile = useTurnstile();
+
   const form = useForm<ProductFields>({
     resolver: zodResolver(productSchema),
     defaultValues: { ...product },
   });
 
-  const { handleSubmit, control } = form;
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+    resetField,
+  } = form;
   const toast = useToast();
 
   const createOrUpdateProduct = api.product.createOrUpdate.useMutation();
@@ -68,6 +78,8 @@ export default function AddEditProductForm({ product, categories }: Props) {
           }
         },
         onError: (error) => {
+          turnstile.reset();
+
           toast.toast({
             variant: "destructive",
             title: product?.id
@@ -125,6 +137,16 @@ export default function AddEditProductForm({ product, categories }: Props) {
         />
 
         <ConditionRadioGroup />
+
+        <div>
+          <Turnstile
+            fixedSize
+            sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+            onVerify={(token) => setValue("turnstileToken", token)}
+            onExpire={() => resetField("turnstileToken")}
+          />
+          <FormError error={errors.turnstileToken} />
+        </div>
 
         <LoadingButton
           type="submit"

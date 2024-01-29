@@ -40,6 +40,7 @@ export const productSchema = z.object({
     z.literal("used"),
   ]),
   categoryId: z.string({ required_error: "Select a category" }),
+  turnstileToken: z.string({ required_error: "Required" }),
 });
 
 export type ProductFields = z.infer<typeof productSchema>;

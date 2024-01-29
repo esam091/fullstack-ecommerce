@@ -7,6 +7,7 @@ import {
 } from "@/server/api/trpc";
 import { db } from "@/server/db";
 import { categories, products, shops } from "@/server/db/schema";
+import validateTurnstile from "@/server/validate-turnstile";
 import { TRPCError } from "@trpc/server";
 import {
   type SQLWrapper,
@@ -95,7 +96,15 @@ export const productRouter = createTRPCRouter({
         }
       }
 
-      const { productId, ...data } = input;
+      const { productId, turnstileToken, ...data } = input;
+
+      const passesTurnstile = await validateTurnstile(turnstileToken);
+      if (!passesTurnstile) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Bot detected",
+        });
+      }
 
       await db
         .insert(products)
