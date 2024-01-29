@@ -68,6 +68,9 @@ export default function AddEditProductForm({ product, categories }: Props) {
         productId: product?.id,
       },
       {
+        onSettled() {
+          turnstile.reset();
+        },
         onSuccess: () => {
           toast.toast({
             title: product?.id ? "Product updated" : "New product created",
@@ -78,8 +81,6 @@ export default function AddEditProductForm({ product, categories }: Props) {
           }
         },
         onError: (error) => {
-          turnstile.reset();
-
           toast.toast({
             variant: "destructive",
             title: product?.id
