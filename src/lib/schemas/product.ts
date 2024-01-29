@@ -39,7 +39,7 @@ export const productSchema = z.object({
     }),
     z.literal("used"),
   ]),
-  categoryId: z.number({ required_error: "Select a category" }),
+  categoryId: z.number({ coerce: true, required_error: "Select a category" }),
   turnstileToken: z.string({ required_error: "Required" }),
 });
 
