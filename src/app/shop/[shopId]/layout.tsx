@@ -5,6 +5,7 @@ import imageUrl from "@/lib/imageUrl";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import SidebarLink from "@/app/my-shop/(sidebar)/sidebar-link";
+import EmptyView from "@/components/ui/empty-view";
 
 export default async function Layout({
   children,
@@ -19,7 +20,15 @@ export default async function Layout({
   const shop = await api.shop.getById.query(shopId);
 
   if (!shop) {
-    notFound();
+    return (
+      <EmptyView
+        title="Shop not found"
+        action={{
+          href: "/",
+          title: "Back to home",
+        }}
+      />
+    );
   }
 
   return (
