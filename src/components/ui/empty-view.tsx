@@ -21,7 +21,7 @@ export default function EmptyView({
   action,
 }: EmptyViewProps) {
   return (
-    <div className={cx("flex flex-col items-center", className)}>
+    <div className={cx("flex flex-col items-center gap-3", className)}>
       {icon}
       <h3 className="text-lg font-semibold">{title}</h3>
       <p>{description}</p>

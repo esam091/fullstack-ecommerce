@@ -54,7 +54,7 @@ function ImageUploader({ onImageIdChange, value }: ImageUploaderProps) {
           <Image
             src={`${imagePrefix}${value}`}
             alt="Uploaded"
-            className="h-full w-full rounded-md bg-cover shadow-sm"
+            className="h-full w-full rounded-md bg-cover object-cover shadow-sm"
             width={112}
             height={112}
           />

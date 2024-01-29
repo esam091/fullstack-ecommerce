@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import EmptyView from "@/components/ui/empty-view";
 
 export default async function Page() {
   const products = await api.product.myProducts.query();
@@ -17,13 +17,14 @@ export default async function Page() {
   if (products.length === 0) {
     return (
       <div>
-        <h2>No products found</h2>
-
-        <p>Add your first product and start selling</p>
-
-        <Button asChild>
-          <Link href={"/my-shop/products/add"}>Add Product</Link>
-        </Button>
+        <EmptyView
+          title="No products found"
+          description="Add your first product and start selling"
+          action={{
+            title: "Add Product",
+            href: "/my-shop/products/add",
+          }}
+        />
       </div>
     );
   }
