@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "816acc8d-9ccc-4204-9722-1ebcac8e84a5",
+  "id": "7784493a-52fc-41ee-8bbd-f8317ad5a1e7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "ep_catalog": {
@@ -9,14 +9,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "char(21)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "shopId": {
           "name": "shopId",
-          "type": "bigint",
+          "type": "char(21)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -76,14 +76,14 @@
       "columns": {
         "catalogId": {
           "name": "catalogId",
-          "type": "bigint",
+          "type": "char(21)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "productId": {
           "name": "productId",
-          "type": "bigint",
+          "type": "char(21)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -150,10 +150,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "char(21)",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "name": {
           "name": "name",
@@ -180,14 +180,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "char(21)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "shopId": {
           "name": "shopId",
-          "type": "bigint",
+          "type": "char(21)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -237,9 +237,9 @@
         },
         "categoryId": {
           "name": "categoryId",
-          "type": "char(21)",
+          "type": "int",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "createdAt": {
@@ -311,10 +311,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigint",
+          "type": "char(21)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
         "userId": {
           "name": "userId",

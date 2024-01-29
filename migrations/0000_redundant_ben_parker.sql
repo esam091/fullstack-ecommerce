@@ -1,6 +1,6 @@
 CREATE TABLE `ep_catalog` (
-	`id` bigint AUTO_INCREMENT NOT NULL,
-	`shopId` bigint NOT NULL,
+	`id` char(21) NOT NULL,
+	`shopId` char(21) NOT NULL,
 	`name` varchar(50) NOT NULL,
 	`createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` timestamp ON UPDATE CURRENT_TIMESTAMP,
@@ -8,36 +8,36 @@ CREATE TABLE `ep_catalog` (
 );
 --> statement-breakpoint
 CREATE TABLE `ep_catalogProduct` (
-	`catalogId` bigint NOT NULL,
-	`productId` bigint NOT NULL,
+	`catalogId` char(21) NOT NULL,
+	`productId` char(21) NOT NULL,
 	`createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` timestamp ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `ep_catalogProduct_catalogId_productId` PRIMARY KEY(`catalogId`,`productId`)
 );
 --> statement-breakpoint
 CREATE TABLE `ep_category` (
-	`id` char(21) NOT NULL,
+	`id` int AUTO_INCREMENT NOT NULL,
 	`name` varchar(50),
 	CONSTRAINT `ep_category_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `ep_product` (
-	`id` bigint AUTO_INCREMENT NOT NULL,
-	`shopId` bigint NOT NULL,
+	`id` char(21) NOT NULL,
+	`shopId` char(21) NOT NULL,
 	`name` varchar(100) NOT NULL,
 	`description` varchar(500) NOT NULL,
 	`image` varchar(36) NOT NULL,
 	`price` double NOT NULL,
 	`condition` enum('new','used') NOT NULL DEFAULT 'new',
 	`stock` int,
-	`categoryId` char(21),
+	`categoryId` int NOT NULL,
 	`createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updatedAt` timestamp ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `ep_product_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `ep_shop` (
-	`id` bigint AUTO_INCREMENT NOT NULL,
+	`id` char(21) NOT NULL,
 	`userId` varchar(100) NOT NULL,
 	`name` varchar(256) NOT NULL,
 	`location` varchar(100) NOT NULL,
