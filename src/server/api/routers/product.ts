@@ -102,7 +102,7 @@ export const productRouter = createTRPCRouter({
       if (!passesTurnstile) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Bot detected",
+          message: "Failed bot detection",
         });
       }
 

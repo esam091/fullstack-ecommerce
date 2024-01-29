@@ -1,9 +1,11 @@
+import { shopSchema } from "@/lib/schemas/shop";
 import {
   authenticatedProcedure,
   createTRPCRouter,
   publicProcedure,
 } from "@/server/api/trpc";
 import { shops } from "@/server/db/schema";
+import validateTurnstile from "@/server/validate-turnstile";
 import { TRPCError } from "@trpc/server";
 import { eq, sql } from "drizzle-orm";
 import z from "zod";
@@ -23,14 +25,18 @@ export const shopRouter = createTRPCRouter({
   }),
 
   createOrUpdate: authenticatedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        image: z.string(),
-        location: z.string(),
-      }),
-    )
+    .input(shopSchema)
     .mutation(async ({ input, ctx }) => {
+      const { turnstileToken } = input;
+
+      const passesTurnstile = await validateTurnstile(turnstileToken);
+      if (!passesTurnstile) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Failed bot detection",
+        });
+      }
+
       await ctx.db
         .insert(shops)
         .values({
