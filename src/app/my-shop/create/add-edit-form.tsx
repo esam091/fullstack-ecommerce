@@ -3,7 +3,6 @@ import { LoadingButton } from "@/components/ui/button";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormError } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormTextField from "@/components/ui/form-textfield";
 import { api } from "@/trpc/react";
@@ -15,6 +14,7 @@ import { type AppRouter } from "@/server/api/root";
 import Turnstile from "react-turnstile";
 import { env } from "@/env";
 import { shopSchema } from "@/lib/schemas/shop";
+import { type z } from "zod";
 
 type Props = {
   shop?: inferRouterOutputs<AppRouter>["shop"]["myShop"];

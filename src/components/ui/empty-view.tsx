@@ -1,10 +1,16 @@
 import { cx } from "class-variance-authority";
+import { Button } from "./button";
+import Link from "next/link";
 
 interface EmptyViewProps {
   icon?: React.ReactNode;
   title?: string;
   description?: string;
   className?: string;
+  action?: {
+    href: string;
+    title: string;
+  };
 }
 
 export default function EmptyView({
@@ -12,12 +18,19 @@ export default function EmptyView({
   title,
   description,
   className,
+  action,
 }: EmptyViewProps) {
   return (
     <div className={cx("flex flex-col items-center", className)}>
       {icon}
       <h3 className="text-lg font-semibold">{title}</h3>
       <p>{description}</p>
+
+      {!!action && (
+        <Button asChild>
+          <Link href={action.href}>{action.title}</Link>
+        </Button>
+      )}
     </div>
   );
 }
