@@ -114,7 +114,7 @@ export default function ShopAddEditForm({ shop }: Props) {
                 type="submit"
                 loading={createOrUpdateShop.isLoading}
               >
-                Create Shop
+                {shop ? "Update Shop" : "Create Shop"}
               </LoadingButton>
             </div>
           </form>
