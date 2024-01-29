@@ -76,7 +76,7 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
           submit(
             {
               ...data,
-              collectionId: catalog?.id,
+              catalogId: catalog?.id,
             },
             {
               onSuccess() {

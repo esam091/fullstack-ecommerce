@@ -122,7 +122,7 @@ export default function AddEditProductForm({ product, categories }: Props) {
         <FormTextField
           control={control}
           name="stock"
-          label="Stock"
+          label="Stock (optional)"
           placeholder="12"
           disabled={createOrUpdateProduct.isLoading}
         />

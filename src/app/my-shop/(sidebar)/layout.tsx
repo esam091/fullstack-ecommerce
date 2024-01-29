@@ -46,7 +46,7 @@ export default async function Layout(props: PropsWithChildren) {
           <nav className="flex flex-col ">
             <SidebarLink href="/my-shop/profile">Profile</SidebarLink>
             <SidebarLink href="/my-shop/products">Products</SidebarLink>
-            <SidebarLink href="/my-shop/catalog">Collections</SidebarLink>
+            <SidebarLink href="/my-shop/catalog">Catalogs</SidebarLink>
           </nav>
         </aside>
         <div className="flex-1 lg:max-w-2xl">{props.children}</div>

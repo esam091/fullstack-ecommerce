@@ -11,11 +11,11 @@ import { TRPCError } from "@trpc/server";
 import { catalogForm } from "@/lib/schemas/catalog";
 import { nanoid } from "nanoid";
 
-async function ensureUserOwnsCollection({
-  collectionId,
+async function ensureUserOwnsCatalog({
+  catalogId,
   userId,
 }: {
-  collectionId: string;
+  catalogId: string;
   userId: string;
 }) {
   const result = await db
@@ -26,7 +26,7 @@ async function ensureUserOwnsCollection({
       and(
         eq(shops.userId, userId),
         eq(catalog.shopId, shops.id),
-        eq(catalog.id, collectionId),
+        eq(catalog.id, catalogId),
       ),
     );
 
@@ -41,15 +41,15 @@ export const catalogRouter = createTRPCRouter({
   createOrUpdate: shopOwnerProcedure
     .input(
       z.object({
-        collectionId: z.string().optional(),
+        catalogId: z.string().optional(),
       }),
     )
     .input(catalogForm)
     .mutation(async ({ ctx, input }) => {
-      const { collectionId, ...data } = input;
-      if (collectionId) {
-        await ensureUserOwnsCollection({
-          collectionId: collectionId,
+      const { catalogId, ...data } = input;
+      if (catalogId) {
+        await ensureUserOwnsCatalog({
+          catalogId: catalogId,
           userId: ctx.auth.userId,
         });
       }
@@ -76,7 +76,7 @@ export const catalogRouter = createTRPCRouter({
         const upsert = await tx
           .insert(catalog)
           .values({
-            id: collectionId ?? newId,
+            id: catalogId ?? newId,
             name: input.name,
             shopId: ctx.shopId,
           })
@@ -86,7 +86,7 @@ export const catalogRouter = createTRPCRouter({
             },
           });
 
-        const id = collectionId ?? newId;
+        const id = catalogId ?? newId;
 
         await tx
           .delete(catalogProducts)
@@ -104,9 +104,9 @@ export const catalogRouter = createTRPCRouter({
   delete: authenticatedProcedure
     .input(z.string())
     .mutation(async ({ input, ctx }) => {
-      await ensureUserOwnsCollection({
+      await ensureUserOwnsCatalog({
         userId: ctx.auth.userId,
-        collectionId: input,
+        catalogId: input,
       });
 
       await db.transaction(async (tx) => {
