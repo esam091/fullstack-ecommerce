@@ -90,10 +90,10 @@ export default function CatalogAddEditForm({ products, catalog }: Props) {
                   router.push("/my-shop/catalog");
                 }
               },
-              onError() {
+              onError(error) {
                 toast.toast({
                   title: "Error",
-                  description: "Something went wrong",
+                  description: error.message,
                   variant: "destructive",
                 });
               },

@@ -6,7 +6,7 @@ import {
 } from "../trpc";
 import { db } from "@/server/db";
 import { catalogProducts, catalog, products, shops } from "@/server/db/schema";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { catalogForm } from "@/lib/schemas/catalog";
 import { nanoid } from "nanoid";
@@ -54,7 +54,7 @@ export const catalogRouter = createTRPCRouter({
         });
       }
 
-      const aa = await db
+      const productIds = await db
         .select({ id: products.id })
         .from(products)
         .where(
@@ -64,7 +64,8 @@ export const catalogRouter = createTRPCRouter({
           ),
         );
 
-      if (aa.length !== data.productIds.length) {
+      // ensure all products are owned by this shop
+      if (productIds.length !== data.productIds.length) {
         throw new TRPCError({
           code: "NOT_FOUND",
         });
@@ -72,8 +73,24 @@ export const catalogRouter = createTRPCRouter({
 
       const newId = nanoid();
 
+      const maxCatalogsAllowed = 1;
+
+      const [result] = await db
+        .select({
+          count: sql<number>`cast(count(*) as unsigned)`,
+        })
+        .from(catalog)
+        .where(eq(catalog.shopId, ctx.shopId));
+
+      if (result && result.count >= maxCatalogsAllowed) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Maximum number of catalogs reached",
+        });
+      }
+
       await db.transaction(async (tx) => {
-        const upsert = await tx
+        await tx
           .insert(catalog)
           .values({
             id: catalogId ?? newId,
