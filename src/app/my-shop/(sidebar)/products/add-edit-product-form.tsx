@@ -69,6 +69,7 @@ export default function AddEditProductForm({ product, categories }: Props) {
         },
         onError: (error) => {
           toast.toast({
+            variant: "destructive",
             title: product?.id
               ? "Failed to edit product"
               : "Failed to create product",

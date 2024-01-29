@@ -70,6 +70,29 @@ export const productRouter = createTRPCRouter({
             code: "NOT_FOUND",
           });
         }
+      } else {
+        const [result] = await db
+          .select({
+            count: sql<number>`cast(count(*) as unsigned)`,
+          })
+          .from(products)
+          .where(eq(products.shopId, ctx.shopId));
+
+        if (!result) {
+          // if not found then the query must be wrong
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+
+        const maxProducts = 30;
+
+        if (result.count >= maxProducts) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: `Cannot have more than ${maxProducts} products`,
+          });
+        }
       }
 
       const { productId, ...data } = input;

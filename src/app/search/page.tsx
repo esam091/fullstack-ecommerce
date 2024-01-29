@@ -52,7 +52,7 @@ export default async function Page({
         categories={await categories}
       />
       <div className="col-span-4">
-        Products
+        <h1 className="text-2xl font-bold">Products</h1>
         {!rows.length && (
           <EmptyView
             icon={<SearchX size={40} />}
