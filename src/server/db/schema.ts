@@ -3,7 +3,6 @@
 
 import { relations, sql } from "drizzle-orm";
 import {
-  bigint,
   index,
   mysqlTableCreator,
   timestamp,
@@ -23,10 +22,14 @@ import {
  */
 export const mysqlTable = mysqlTableCreator((name) => `ep_${name}`);
 
+function nanoid(name: string) {
+  return char(name, { length: 21 });
+}
+
 export const shops = mysqlTable(
   "shop",
   {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    id: nanoid("id").primaryKey(),
     userId: varchar("userId", { length: 100 }).unique().notNull(),
     name: varchar("name", { length: 256 }).notNull(),
     location: varchar("location", { length: 100 }).notNull(),
@@ -44,8 +47,8 @@ export const shops = mysqlTable(
 export const products = mysqlTable(
   "product",
   {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    shopId: bigint("shopId", { mode: "number" })
+    id: nanoid("id").primaryKey(),
+    shopId: nanoid("shopId")
       .references(() => shops.id)
       .notNull(),
     name: varchar("name", { length: 100 }).notNull(),
@@ -54,7 +57,7 @@ export const products = mysqlTable(
     price: double("price").notNull(),
     condition: mysqlEnum("condition", ["new", "used"]).notNull().default("new"),
     stock: int("stock"),
-    categoryId: char("categoryId", { length: 21 })
+    categoryId: int("categoryId")
       .notNull()
       .references(() => categories.id),
     createdAt: timestamp("createdAt")
@@ -68,8 +71,8 @@ export const products = mysqlTable(
 );
 
 export const catalog = mysqlTable("catalog", {
-  id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-  shopId: bigint("shopId", { mode: "number" })
+  id: nanoid("id").primaryKey(),
+  shopId: nanoid("shopId")
     .references(() => shops.id)
     .notNull(),
   name: varchar("name", { length: 50 }).notNull(),
@@ -82,10 +85,10 @@ export const catalog = mysqlTable("catalog", {
 export const catalogProducts = mysqlTable(
   "catalogProduct",
   {
-    catalogId: bigint("catalogId", { mode: "number" })
+    catalogId: nanoid("catalogId")
       .references(() => catalog.id)
       .notNull(),
-    productId: bigint("productId", { mode: "number" })
+    productId: nanoid("productId")
       .references(() => products.id)
       .notNull(),
     createdAt: timestamp("createdAt")
@@ -102,7 +105,7 @@ export const catalogProducts = mysqlTable(
 );
 
 export const categories = mysqlTable("category", {
-  id: char("id", { length: 21 }).primaryKey(),
+  id: int("id").primaryKey().autoincrement(),
   name: varchar("name", { length: 50 }),
 });
 

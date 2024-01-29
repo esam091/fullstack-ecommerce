@@ -24,9 +24,10 @@ import {
   sql,
 } from "drizzle-orm";
 import { z } from "zod";
+import { nanoid } from "nanoid";
 
 const productIdInput = z.object({
-  productId: z.number(),
+  productId: z.string(),
 });
 
 const ownProductProcedure = authenticatedProcedure
@@ -52,7 +53,7 @@ const ownProductProcedure = authenticatedProcedure
 
 export const productRouter = createTRPCRouter({
   createOrUpdate: shopOwnerProcedure
-    .input(z.object({ productId: z.number().optional() }))
+    .input(z.object({ productId: z.string().optional() }))
     .input(productSchema)
     .mutation(async ({ ctx, input }) => {
       if (input.productId) {
@@ -110,7 +111,7 @@ export const productRouter = createTRPCRouter({
         .insert(products)
         .values({
           ...input,
-          id: productId,
+          id: productId ?? nanoid(),
           shopId: ctx.shopId,
         })
         .onDuplicateKeyUpdate({

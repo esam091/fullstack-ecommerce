@@ -9,12 +9,13 @@ import { catalogProducts, catalog, products, shops } from "@/server/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { catalogForm } from "@/lib/schemas/catalog";
+import { nanoid } from "nanoid";
 
 async function ensureUserOwnsCollection({
   collectionId,
   userId,
 }: {
-  collectionId: number;
+  collectionId: string;
   userId: string;
 }) {
   const result = await db
@@ -40,7 +41,7 @@ export const catalogRouter = createTRPCRouter({
   createOrUpdate: shopOwnerProcedure
     .input(
       z.object({
-        collectionId: z.number().optional(),
+        collectionId: z.string().optional(),
       }),
     )
     .input(catalogForm)
@@ -69,11 +70,13 @@ export const catalogRouter = createTRPCRouter({
         });
       }
 
+      const newId = nanoid();
+
       await db.transaction(async (tx) => {
         const upsert = await tx
           .insert(catalog)
           .values({
-            id: collectionId,
+            id: collectionId ?? newId,
             name: input.name,
             shopId: ctx.shopId,
           })
@@ -83,7 +86,7 @@ export const catalogRouter = createTRPCRouter({
             },
           });
 
-        const id = collectionId ?? upsert[0].insertId;
+        const id = collectionId ?? newId;
 
         await tx
           .delete(catalogProducts)
@@ -99,7 +102,7 @@ export const catalogRouter = createTRPCRouter({
     }),
 
   delete: authenticatedProcedure
-    .input(z.number())
+    .input(z.string())
     .mutation(async ({ input, ctx }) => {
       await ensureUserOwnsCollection({
         userId: ctx.auth.userId,

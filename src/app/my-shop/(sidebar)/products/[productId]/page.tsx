@@ -8,7 +8,7 @@ export default async function Page({
   params: { productId: string };
 }) {
   const product = await api.product.getDetail.query({
-    productId: Number(productId),
+    productId,
     onlyMine: true,
   });
 

@@ -39,7 +39,7 @@ export const productSchema = z.object({
     }),
     z.literal("used"),
   ]),
-  categoryId: z.string({ required_error: "Select a category" }),
+  categoryId: z.number({ required_error: "Select a category" }),
   turnstileToken: z.string({ required_error: "Required" }),
 });
 
@@ -51,7 +51,7 @@ export const searchSchema = z.object({
   maxPrice: z.number({ coerce: true }).optional().catch(undefined),
   new: z.boolean().optional(),
   used: z.boolean().optional(),
-  categoryIds: z.string().array().optional(),
+  categoryIds: z.number({ coerce: true }).array().optional(),
   sort: z
     .union([
       z.literal("p_asc").describe("Cheapest"),

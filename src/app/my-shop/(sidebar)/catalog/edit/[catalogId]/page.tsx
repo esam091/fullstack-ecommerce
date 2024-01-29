@@ -15,7 +15,7 @@ export default async function Page({
       id: true,
       name: true,
     },
-    where: eq(catalog.id, Number(catalogId)),
+    where: eq(catalog.id, catalogId),
     with: {
       products: {
         columns: {

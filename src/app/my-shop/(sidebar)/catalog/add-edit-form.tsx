@@ -42,7 +42,7 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   products: Array<typeof products.$inferSelect>;
-  catalog?: CatalogFormSchema & { id: number };
+  catalog?: CatalogFormSchema & { id: string };
 };
 
 export default function CatalogAddEditForm({ products, catalog }: Props) {
@@ -197,7 +197,7 @@ function SelectedProducts({
 
   const productIDs = watch("productIds");
   const map = useMemo(() => {
-    const record: Record<number, Product> = {};
+    const record: Record<string, Product> = {};
 
     for (const product of products) {
       record[product.id] = product;

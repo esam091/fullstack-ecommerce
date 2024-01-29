@@ -198,7 +198,7 @@ function ProductCategoryField({
   categoryId,
 }: {
   categories: inferRouterOutputs<AppRouter>["product"]["getCategories"];
-  categoryId?: string;
+  categoryId?: number;
 }) {
   const { control } = useFormContext<ProductFields>();
 
@@ -211,13 +211,16 @@ function ProductCategoryField({
           <FormLabel>Product Category</FormLabel>
 
           <FormControl>
-            <Select onValueChange={field.onChange} defaultValue={categoryId}>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={String(categoryId)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Choose a category" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
+                  <SelectItem key={category.id} value={String(category.id)}>
                     {category.name}
                   </SelectItem>
                 ))}

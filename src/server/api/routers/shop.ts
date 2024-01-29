@@ -9,6 +9,7 @@ import validateTurnstile from "@/server/validate-turnstile";
 import { TRPCError } from "@trpc/server";
 import { eq, sql } from "drizzle-orm";
 import z from "zod";
+import { nanoid } from "nanoid";
 
 export const shopRouter = createTRPCRouter({
   myShop: publicProcedure.query(async ({ ctx }) => {
@@ -40,6 +41,7 @@ export const shopRouter = createTRPCRouter({
       await ctx.db
         .insert(shops)
         .values({
+          id: nanoid(),
           userId: ctx.auth.userId,
           name: input.name,
           image: input.image,

@@ -31,7 +31,7 @@ export default function buildSearchParam(
 
   if (newSearchParams.categoryIds) {
     for (const id of newSearchParams.categoryIds) {
-      urlSearchParams.append("c", id);
+      urlSearchParams.append("c", String(id));
     }
   }
 
