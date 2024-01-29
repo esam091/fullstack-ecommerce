@@ -5,6 +5,9 @@ import { shops } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { LinkIcon } from "lucide-react";
+import Link from "next/link";
 
 export default async function Layout(props: PropsWithChildren) {
   const userId = auth().userId;
@@ -12,20 +15,28 @@ export default async function Layout(props: PropsWithChildren) {
     redirect("https://active-gannet-19.accounts.dev/sign-in");
   }
 
-  const result = await db
+  const [shop] = await db
     .select({ id: shops.id })
     .from(shops)
     .where(eq(shops.userId, userId));
 
-  if (!result.length) {
+  if (!shop) {
     redirect("/my-shop/create");
   }
 
   return (
     <div>
       <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">My Shop</h2>
+        <div className="flex items-baseline">
+          <h2 className="text-2xl font-bold tracking-tight">My Shop</h2>
+        </div>
         <p className="text-muted-foreground">Manage your shop and products</p>
+        <Button asChild variant={"link"} size={"sm"}>
+          <Link href={`/shop/${shop.id}`} className="inline-flex gap-1">
+            <LinkIcon size={15} />
+            See my page
+          </Link>
+        </Button>
       </div>
 
       <div className="my-6 h-[1px] w-full shrink-0 bg-border"></div>

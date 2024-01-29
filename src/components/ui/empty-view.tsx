@@ -24,7 +24,7 @@ export default function EmptyView({
     <div className={cx("flex flex-col items-center gap-3", className)}>
       {icon}
       <h3 className="text-lg font-semibold">{title}</h3>
-      <p>{description}</p>
+      <p className="text-center">{description}</p>
 
       {!!action && (
         <Button asChild>

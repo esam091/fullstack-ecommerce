@@ -4,6 +4,8 @@ import { and, eq, sql, getTableColumns } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { stringifyColumn } from "../../../lib/stringifyColumn";
 import { ProductCard } from "./ProductCard";
+import EmptyView from "@/components/ui/empty-view";
+import { FrownIcon } from "lucide-react";
 
 export default async function ProductList({
   shopId,
@@ -52,9 +54,16 @@ export default async function ProductList({
 
   return (
     <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
-      {shopProducts.map((product) => (
-        <ProductCard product={product} />
-      ))}
+      {!shopProducts.length && (
+        <EmptyView
+          title="No products found"
+          description="This shop has not added any product yet"
+          icon={<FrownIcon size={40} />}
+        />
+      )}
+
+      {!!shopProducts.length &&
+        shopProducts.map((product) => <ProductCard product={product} />)}
     </div>
   );
 }
