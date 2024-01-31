@@ -11,7 +11,8 @@
     "dev": "next dev",
     "lint": "next lint",
     "db:migrate": "dotenv tsx ./migrate.ts",
-    "start": "next start"
+    "start": "next start",
+    "db:seed": "dotenv -- node ./script/generate.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.28.1",
@@ -58,6 +59,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@mistralai/mistralai": "^0.0.10",
     "@next/eslint-plugin-next": "^14.1.0",
     "@types/eslint": "^8.44.7",
     "@types/node": "^18.17.0",
