@@ -3,6 +3,8 @@ import { api } from "@/trpc/server";
 import UserSection from "./user-section";
 import Link from "next/link";
 import SearchBar from "./search-bar";
+import logo from "./logo.png";
+import Image from "next/image";
 
 export default async function NavBar() {
   const shop = await api.shop.myShop.query();
@@ -12,8 +14,8 @@ export default async function NavBar() {
       <div className="container mx-auto flex h-full items-center justify-between gap-16">
         <Link href={"/"}>
           <span className="flex items-center gap-1 text-primary">
-            <ShoppingBag size={32} />
-            <span className="text-xl">Happy Commerce</span>
+            <Image src={logo} alt="Brand logo" className="h-10 w-10" />
+            <span className="text-xl">Kaimono</span>
           </span>
         </Link>
 

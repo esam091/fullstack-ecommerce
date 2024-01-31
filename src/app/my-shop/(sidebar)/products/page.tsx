@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/table";
 import EmptyView from "@/components/ui/empty-view";
 
+export const metadata = {
+  title: "My products",
+};
+
 export default async function Page() {
   const products = await api.product.myProducts.query();
 

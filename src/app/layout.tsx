@@ -15,8 +15,8 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Happy Commerce",
-  description: "eCommerce Portfolio",
+  title: "Kaimono",
+  description: "Fullstack Portfolio",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
