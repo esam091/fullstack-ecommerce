@@ -1,23 +1,39 @@
 import { api } from "@/trpc/server";
-import { notFound } from "next/navigation";
-import { type PropsWithChildren } from "react";
+import { cache, type PropsWithChildren } from "react";
 import imageUrl from "@/lib/imageUrl";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import SidebarLink from "@/app/my-shop/(sidebar)/sidebar-link";
 import EmptyView from "@/components/ui/empty-view";
+import { type Metadata } from "next";
+
+type PageParams = {
+  params: {
+    shopId: string;
+  };
+};
+
+const getShopById = cache((shopId: string) => {
+  return api.shop.getById.query(shopId);
+});
+
+export async function generateMetadata({
+  params: { shopId },
+}: PageParams): Promise<Metadata> {
+  const shop = await getShopById(shopId);
+
+  return {
+    title: shop?.name ?? "",
+  };
+}
 
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{
-  params: {
-    shopId: string;
-  };
-}>) {
+}: PropsWithChildren<PageParams>) {
   const { shopId } = params;
 
-  const shop = await api.shop.getById.query(shopId);
+  const shop = await getShopById(shopId);
 
   if (!shop) {
     return (
