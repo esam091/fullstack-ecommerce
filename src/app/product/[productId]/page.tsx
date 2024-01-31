@@ -4,15 +4,17 @@ import { stringifyColumn } from "@/lib/stringifyColumn";
 import { db } from "@/server/db";
 import { products, shops } from "@/server/db/schema";
 import { eq, getTableColumns } from "drizzle-orm";
+import { type Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
-export default async function Page({
-  params: { productId },
-}: {
+type PageParams = {
   params: { productId: string };
-}) {
+};
+
+const getProductById = cache(async (id: string) => {
   const [result] = await db
     .select({
       product: getTableColumns(products),
@@ -25,7 +27,23 @@ export default async function Page({
     })
     .from(products)
     .innerJoin(shops, eq(products.shopId, shops.id))
-    .where(eq(stringifyColumn(products.id), productId));
+    .where(eq(stringifyColumn(products.id), id));
+
+  return result;
+});
+
+export async function generateMetadata({
+  params: { productId },
+}: PageParams): Promise<Metadata> {
+  const result = await getProductById(productId);
+
+  return {
+    title: result?.product.name ?? "",
+  };
+}
+
+export default async function Page({ params: { productId } }: PageParams) {
+  const result = await getProductById(productId);
 
   if (!result) {
     notFound();

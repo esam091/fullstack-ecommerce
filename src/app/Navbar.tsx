@@ -1,4 +1,3 @@
-import { ShoppingBag } from "lucide-react";
 import { api } from "@/trpc/server";
 import UserSection from "./user-section";
 import Link from "next/link";
