@@ -73,7 +73,7 @@ export const catalogRouter = createTRPCRouter({
 
       const newId = nanoid();
 
-      const maxCatalogsAllowed = 1;
+      const maxCatalogsAllowed = 5;
 
       const [result] = await db
         .select({
