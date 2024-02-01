@@ -20,6 +20,9 @@ export const env = createEnv({
     SUPABASE_URL: z.string().url(),
     SUPABASE_KEY: z.string(),
     TURNSTILE_SECRET_KEY: z.string(),
+    DATABASE_MODE: z
+      .union([z.literal("default"), z.literal("planetscale")])
+      .default("default"),
   },
 
   /**
@@ -45,6 +48,7 @@ export const env = createEnv({
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     NEXT_PUBLIC_IMAGE_BUCKET: process.env.NEXT_PUBLIC_IMAGE_BUCKET,
+    DATABASE_MODE: process.env.DATABASE_MODE,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

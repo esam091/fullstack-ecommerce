@@ -19,6 +19,6 @@ export const connection = await mysql.createConnection({
 
 export const db = drizzle(connection, {
   schema,
-  mode: "default",
-  logger: true,
+  mode: env.DATABASE_MODE,
+  logger: env.NODE_ENV === "development",
 });
