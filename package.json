@@ -12,7 +12,7 @@
     "lint": "next lint",
     "db:migrate": "dotenv tsx ./migrate.ts",
     "start": "next start",
-    "db:seed": "dotenv -- node ./script/generate.mjs"
+    "db:seed": "dotenv -- tsx ./script/generate.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.28.1",
