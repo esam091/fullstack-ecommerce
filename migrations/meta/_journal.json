@@ -15,6 +15,13 @@
       "when": 1706544973912,
       "tag": "0001_mushy_psylocke",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1706779276443,
+      "tag": "0002_lonely_eddie_brock",
+      "breakpoints": true
     }
   ]
 }
