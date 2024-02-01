@@ -29,6 +29,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string(),
+    NEXT_PUBLIC_IMAGE_BUCKET: z.string(),
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
@@ -43,6 +44,7 @@ export const env = createEnv({
     SUPABASE_KEY: process.env.SUPABASE_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
+    NEXT_PUBLIC_IMAGE_BUCKET: process.env.NEXT_PUBLIC_IMAGE_BUCKET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

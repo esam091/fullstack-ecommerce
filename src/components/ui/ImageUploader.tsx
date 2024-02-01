@@ -7,9 +7,7 @@ import { Progress } from "./progress";
 import Image from "next/image";
 import { useImageUpload } from "@/lib/useImageUpload";
 import { Button } from "./button";
-
-const imagePrefix =
-  "https://rymmmspllbfdqosgmyzt.supabase.co/storage/v1/object/public/hc-images/";
+import imageUrl from "@/lib/imageUrl";
 
 type ImageUploaderProps = {
   onImageIdChange(id: string | null): void;
@@ -52,7 +50,7 @@ function ImageUploader({ onImageIdChange, value }: ImageUploaderProps) {
       {value ? (
         <>
           <Image
-            src={`${imagePrefix}${value}`}
+            src={imageUrl(value)}
             alt="Uploaded"
             className="h-full w-full rounded-md bg-cover object-cover shadow-sm"
             width={112}

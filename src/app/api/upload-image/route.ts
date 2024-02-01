@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   newImageStream.close();
 
   const { error } = await supabase.storage
-    .from("hc-images")
+    .from(env.NEXT_PUBLIC_IMAGE_BUCKET)
     .upload(fileName, fs.createReadStream(tempPath), {
       duplex: "half",
       contentType: "image/webp",
