@@ -8,11 +8,12 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LinkIcon } from "lucide-react";
 import Link from "next/link";
+import { SIGN_IN_URL } from "@clerk/nextjs/server";
 
 export default async function Layout(props: PropsWithChildren) {
   const userId = auth().userId;
   if (!userId) {
-    redirect("https://active-gannet-19.accounts.dev/sign-in");
+    redirect(SIGN_IN_URL);
   }
 
   const [shop] = await db
