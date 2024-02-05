@@ -64,11 +64,12 @@ export default async function Page({ params: { productId } }: PageParams) {
 
             <Image
               src={imageUrl(product.image)}
-              width={600}
-              height={600}
               alt="Product Image"
               className="rounded-sm"
               priority
+              width={600}
+              height={600}
+              sizes="300px, (min-width: 640px) 500px, (min-width: 768px) 320px, (min-width: 1024px) 420px, (min-width: 1280px) 570px"
             />
           </div>
           {/* END Images */}
