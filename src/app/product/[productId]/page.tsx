@@ -68,6 +68,7 @@ export default async function Page({ params: { productId } }: PageParams) {
               height={600}
               alt="Product Image"
               className="rounded-sm"
+              priority
             />
           </div>
           {/* END Images */}
