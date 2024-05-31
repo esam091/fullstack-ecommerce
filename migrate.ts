@@ -1,6 +1,10 @@
-import { db, connection } from "@/server/db";
-import { migrate } from "drizzle-orm/mysql2/migrator";
+import { db } from "@/server/db";
+import { migrate } from "drizzle-orm/vercel-postgres/migrator";
 
-await migrate(db, { migrationsFolder: "./migrations" });
+try {
+  await migrate(db, { migrationsFolder: "./migrations" });
+} catch (error) {
+  console.error(error);
+}
 
-await connection.end();
+// await connection.end();

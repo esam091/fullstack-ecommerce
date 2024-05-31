@@ -77,7 +77,7 @@ export const catalogRouter = createTRPCRouter({
 
       const [result] = await db
         .select({
-          count: sql<number>`cast(count(*) as unsigned)`,
+          count: sql<number>`count(*)`,
         })
         .from(catalog)
         .where(eq(catalog.shopId, ctx.shopId));
@@ -97,10 +97,11 @@ export const catalogRouter = createTRPCRouter({
             name: input.name,
             shopId: ctx.shopId,
           })
-          .onDuplicateKeyUpdate({
+          .onConflictDoUpdate({
             set: {
               name: data.name,
             },
+            target: catalog.id,
           });
 
         const id = catalogId ?? newId;

@@ -25,6 +25,7 @@ import {
 } from "drizzle-orm";
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import { productDisplayColumns } from "@/server/db/util";
 
 const productIdInput = z.object({
   productId: z.string(),
@@ -75,7 +76,7 @@ export const productRouter = createTRPCRouter({
       } else {
         const [result] = await db
           .select({
-            count: sql<number>`cast(count(*) as unsigned)`,
+            count: sql<number>`count(*)`,
           })
           .from(products)
           .where(eq(products.shopId, ctx.shopId));
@@ -97,7 +98,7 @@ export const productRouter = createTRPCRouter({
         }
       }
 
-      const { productId, turnstileToken, ...data } = input;
+      const { productId, turnstileToken, price: priceNumber, ...data } = input;
 
       const passesTurnstile = await validateTurnstile(turnstileToken);
       if (!passesTurnstile) {
@@ -107,15 +108,21 @@ export const productRouter = createTRPCRouter({
         });
       }
 
+      const price = sql`round(${priceNumber * 100}, 0)::int`;
       await db
         .insert(products)
         .values({
-          ...input,
+          ...data,
           id: productId ?? nanoid(),
           shopId: ctx.shopId,
+          price,
         })
-        .onDuplicateKeyUpdate({
-          set: data,
+        .onConflictDoUpdate({
+          target: products.id,
+          set: {
+            ...data,
+            price,
+          },
         });
     }),
 
@@ -125,7 +132,7 @@ export const productRouter = createTRPCRouter({
 
   myProducts: shopOwnerProcedure.query(async ({ ctx }) => {
     return await db
-      .select()
+      .select(productDisplayColumns)
       .from(products)
       .where(eq(products.shopId, ctx.shopId));
   }),
@@ -136,7 +143,7 @@ export const productRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const result = await ctx.db
         .select({
-          product: getTableColumns(products),
+          product: productDisplayColumns,
           userId: shops.userId,
         })
         .from(products)
@@ -194,14 +201,17 @@ export const productRouter = createTRPCRouter({
     const pageSize = 8;
 
     let result = ctx.db
-      .select()
+      .select({
+        product: productDisplayColumns,
+        shop: getTableColumns(shops),
+      })
       .from(products)
       .innerJoin(shops, eq(shops.id, products.shopId))
       .where(and(...conditions));
 
     const cnt = ctx.db
       .select({
-        rowCount: sql<number>`cast(ceil(count(*) / ${pageSize}) as unsigned)`,
+        rowCount: sql<number>`count(*) / ${pageSize}`,
       })
       .from(products)
       .where(and(...conditions));

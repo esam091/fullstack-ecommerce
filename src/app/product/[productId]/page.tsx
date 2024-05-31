@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import imageUrl from "@/lib/imageUrl";
-import { stringifyColumn } from "@/lib/stringifyColumn";
 import { db } from "@/server/db";
 import { products, shops } from "@/server/db/schema";
+import { productDisplayColumns } from "@/server/db/util";
 import { eq, getTableColumns } from "drizzle-orm";
 import { type Metadata } from "next";
 import Image from "next/image";
@@ -17,7 +17,7 @@ type PageParams = {
 const getProductById = cache(async (id: string) => {
   const [result] = await db
     .select({
-      product: getTableColumns(products),
+      product: productDisplayColumns,
       shop: {
         id: shops.id,
         name: shops.name,
@@ -27,7 +27,7 @@ const getProductById = cache(async (id: string) => {
     })
     .from(products)
     .innerJoin(shops, eq(products.shopId, shops.id))
-    .where(eq(stringifyColumn(products.id), id));
+    .where(eq(products.id, id));
 
   return result;
 });

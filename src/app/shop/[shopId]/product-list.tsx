@@ -1,11 +1,11 @@
 import { db } from "@/server/db";
 import { catalog, catalogProducts, products } from "@/server/db/schema";
-import { and, eq, sql, getTableColumns } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { stringifyColumn } from "../../../lib/stringifyColumn";
 import { ProductCard } from "./ProductCard";
 import EmptyView from "@/components/ui/empty-view";
 import { FrownIcon } from "lucide-react";
+import { productDisplayColumns } from "@/server/db/util";
 
 export default async function ProductList({
   shopId,
@@ -22,34 +22,27 @@ export default async function ProductList({
         a: sql`1`,
       })
       .from(catalog)
-      .where(
-        and(
-          eq(stringifyColumn(catalog.shopId), shopId),
-          eq(stringifyColumn(catalog.id), catalogId),
-        ),
-      );
+      .where(and(eq(catalog.shopId, shopId), eq(catalog.id, catalogId)));
 
     if (!catalogResult) {
       notFound();
     }
 
     shopProducts = await db
-      .select({
-        ...getTableColumns(products),
-      })
+      .select(productDisplayColumns)
       .from(catalogProducts)
       .innerJoin(products, eq(catalogProducts.productId, products.id))
       .where(
         and(
-          eq(stringifyColumn(catalogProducts.catalogId), catalogId),
+          eq(catalogProducts.catalogId, catalogId),
           eq(catalogProducts.productId, products.id),
         ),
       );
   } else {
     shopProducts = await db
-      .select()
+      .select(productDisplayColumns)
       .from(products)
-      .where(eq(sql<string>`CAST(${products.shopId} as char)`, shopId));
+      .where(eq(products.shopId, shopId));
   }
 
   return (

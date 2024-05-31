@@ -47,7 +47,8 @@ export const shopRouter = createTRPCRouter({
           image: input.image,
           location: input.location,
         })
-        .onDuplicateKeyUpdate({
+        .onConflictDoUpdate({
+          target: shops.userId,
           set: {
             name: input.name,
             location: input.location,
@@ -58,7 +59,7 @@ export const shopRouter = createTRPCRouter({
 
   getById: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
     return ctx.db.query.shops.findFirst({
-      where: eq(sql<string>`CAST(${shops.id} as char)`, input),
+      where: eq(shops.id, input),
       with: {
         catalogs: {
           columns: {

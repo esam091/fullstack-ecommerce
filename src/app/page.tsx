@@ -3,23 +3,27 @@ import { Button } from "@/components/ui/button";
 import { CardContent, Card } from "@/components/ui/card";
 import { db } from "@/server/db";
 import { products, shops } from "@/server/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import imageUrl from "@/lib/imageUrl";
 import Image from "next/image";
 import { ProductCard } from "./shop/[shopId]/ProductCard";
+import { productDisplayColumns } from "@/server/db/util";
 
 export default async function Component() {
   const [featuredProduct] = await db
     .select()
     .from(products)
-    .orderBy(sql`RAND()`)
+    .orderBy(sql`RANDOM()`)
     .limit(1);
 
   const popularProducts = await db
-    .select()
+    .select({
+      product: productDisplayColumns,
+      shop: getTableColumns(shops),
+    })
     .from(products)
     .innerJoin(shops, eq(shops.id, products.shopId))
-    .orderBy(sql`RAND()`)
+    .orderBy(sql`RANDOM()`)
     .limit(4);
 
   return (
