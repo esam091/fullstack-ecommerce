@@ -1,3 +1,5 @@
+[![Live Demo](https://img.shields.io/badge/Live_Demo-black?logo=googlechrome&style=for-the-badge)](https://fullstack.samueledwin.com)
+
 This project is a partial implementation of an eCommerce marketplace.
 
 Supported features:
